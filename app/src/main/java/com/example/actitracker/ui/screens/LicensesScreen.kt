@@ -1,5 +1,6 @@
 package com.example.actitracker.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -41,36 +42,55 @@ fun LicensesScreen(
         },
         containerColor = backgroundColor
     ) { padding ->
+        val licenses = listOf(
+            Triple(
+                stringResource(R.string.license_material_icons),
+                stringResource(R.string.license_apache_title),
+                stringResource(R.string.license_apache_header) + "\n\n" + stringResource(R.string.license_apache_text)
+            ),
+            Triple(
+                stringResource(R.string.license_lucide_title),
+                stringResource(R.string.license_isc_title),
+                stringResource(R.string.license_isc_text)
+            ),
+            Triple(
+                stringResource(R.string.license_phosphor_tabler_title),
+                stringResource(R.string.license_mit_title),
+                stringResource(R.string.license_mit_text)
+            )
+        )
+
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            LicenseItem(
-                name = stringResource(R.string.license_material_icons),
-                license = stringResource(R.string.license_apache_title),
-                contentColor = contentColor
-            )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            Text(
-                text = stringResource(R.string.license_apache_header),
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                color = contentColor.copy(alpha = 0.7f)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            Text(
-                text = stringResource(R.string.license_apache_text),
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                color = contentColor.copy(alpha = 0.6f)
-            )
+            licenses.forEach { (name, licenseName, text) ->
+                Column {
+                    LicenseItem(
+                        name = name,
+                        license = licenseName,
+                        contentColor = contentColor
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = text,
+                        fontSize = 10.sp,
+                        lineHeight = 14.sp,
+                        fontFamily = FontFamily.Monospace,
+                        color = contentColor.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .background(contentColor.copy(alpha = 0.05f))
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }

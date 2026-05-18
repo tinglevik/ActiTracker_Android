@@ -177,8 +177,13 @@
 
     <string name="yes_confirm">Yes</string>
     <!-- Licenses Screen -->
-    <string name="license_material_icons">Material Icons (Google)</string>
+    <string name="license_material_icons">Material Design Components (Google)</string>
     <string name="license_apache_title">Apache License 2.0</string>
+    <string name="license_lucide_title">Lucide Icons</string>
+    <string name="license_phosphor_tabler_title">Phosphor &amp; Tabler Icons</string>
+    <string name="license_isc_title">ISC License</string>
+    <string name="license_mit_title">MIT License</string>
+
     <string name="license_apache_header">Apache License\nVersion 2.0, January 2004\nhttp://www.apache.org/licenses/</string>
     <string name="license_apache_text" translatable="false">
         TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n
@@ -198,5 +203,38 @@
         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
         See the License for the specific language governing permissions and\n
         limitations under the License.
+    </string>
+
+    <string name="license_isc_text" translatable="false">
+        Copyright (c) 2022 Lucide Contributors\n\n
+        Permission to use, copy, modify, and/or distribute this software for any
+        purpose with or without fee is hereby granted, provided that the above
+        copyright notice and this permission notice appear in all copies.\n\n
+        THE SOFTWARE IS PROVIDED &quot;AS IS&quot; AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+        WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+        ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+        WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+        ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+        OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+    </string>
+
+    <string name="license_mit_text" translatable="false">
+        Copyright (c) 2021 Phosphor Icons\n
+        Copyright (c) 2023 Tabler Icons\n\n
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the &quot;Software&quot;), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:\n\n
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.\n\n
+        THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     </string>
 </resources>

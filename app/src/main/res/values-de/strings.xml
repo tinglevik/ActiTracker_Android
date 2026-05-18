@@ -177,7 +177,12 @@
 
     <string name="yes_confirm">Ja</string>
     <!-- Licenses Screen -->
-    <string name="license_material_icons">Material Icons (Google)</string>
-    <string name="license_apache_title">Apache License 2.0</string>
+    <string name="license_material_icons">Material Design-Komponenten (Google)</string>
+    <string name="license_apache_title">Apache-Lizenz 2.0</string>
+    <string name="license_lucide_title">Lucide-Symbole</string>
+    <string name="license_phosphor_tabler_title">Phosphor- &amp; Tabler-Symbole</string>
+    <string name="license_isc_title">ISC-Lizenz</string>
+    <string name="license_mit_title">MIT-Lizenz</string>
+
     <string name="license_apache_header">Apache License\nVersion 2.0, Januar 2004\nhttp://www.apache.org/licenses/</string>
 </resources>
