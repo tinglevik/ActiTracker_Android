@@ -38,6 +38,8 @@
     <string name="period_7_days">7 Tage</string>
     <string name="period_30_days">30 Tage</string>
     <string name="period_year">Jahr</string>
+    <string name="period_custom">Zeitraum</string>
+    <string name="select_date_range">Zeitraum auswählen</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>

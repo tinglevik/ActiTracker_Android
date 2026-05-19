@@ -38,6 +38,8 @@
     <string name="period_7_days">7 днів</string>
     <string name="period_30_days">30 днів</string>
     <string name="period_year">Рік</string>
+    <string name="period_custom">Період</string>
+    <string name="select_date_range">Виберіть період</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Налаштування</string>

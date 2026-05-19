@@ -40,6 +40,9 @@ class ReportViewModel(
     private val _selectedPeriod = MutableStateFlow(ReportPeriod.TODAY)
     val selectedPeriod: StateFlow<ReportPeriod> = _selectedPeriod
 
+    private val _customDateRange = MutableStateFlow<Pair<Long, Long>?>(null)
+    val customDateRange: StateFlow<Pair<Long, Long>?> = _customDateRange
+
     private val _dateOffset = MutableStateFlow(0)
     val dateOffset: StateFlow<Int> = _dateOffset
 
@@ -61,15 +64,16 @@ class ReportViewModel(
             activitiesFlow,
             tagsFlow,
             _selectedPeriod,
-            _dateOffset
-        ) { activities, tags, period, offset ->
-            val (from, to) = getDateRange(period, System.currentTimeMillis(), offset)
+            _dateOffset,
+            _customDateRange
+        ) { activities, tags, period, offset, customRange ->
+            val (from, to) = getDateRange(period, System.currentTimeMillis(), offset, customRange)
             val sessions = repository.getAllSessionsForPeriod(from, to)
             BaseReportData(activities, tags, sessions)
         }
 
         viewModelScope.launch {
-            // Combine 7 flows. Using 'args' array since there's no overload for 7 flows.
+            // Combine 8 flows. Using 'args' array since there's no overload for this many flows.
             combine(
                 baseDataFlow,
                 activeActivityIdFlow,
@@ -77,15 +81,18 @@ class ReportViewModel(
                 _ticker,
                 _reportMode,
                 _selectedPeriod,
-                _dateOffset
+                _dateOffset,
+                _customDateRange
             ) { args ->
                 val base = args[0] as BaseReportData
                 val currentTime = args[3] as Long
                 val mode = args[4] as ReportMode
                 val period = args[5] as ReportPeriod
                 val offset = args[6] as Int
+                @Suppress("UNCHECKED_CAST")
+                val customRange = args[7] as? Pair<Long, Long>
 
-                val (from, to) = getDateRange(period, currentTime, offset)
+                val (from, to) = getDateRange(period, currentTime, offset, customRange)
                 
                 computeStatsSync(
                     base.activities, base.tags, base.sessions, 
@@ -101,6 +108,11 @@ class ReportViewModel(
     fun selectPeriod(period: ReportPeriod) {
         _selectedPeriod.value = period
         _dateOffset.value = 0
+    }
+
+    fun setCustomRange(from: Long, to: Long) {
+        _customDateRange.value = from to to
+        _selectedPeriod.value = ReportPeriod.CUSTOM_RANGE
     }
 
     fun toggleReportMode() {
@@ -204,7 +216,10 @@ class ReportViewModel(
         }.timeInMillis
     }
 
-    private fun getDateRange(period: ReportPeriod, now: Long, offset: Int): Pair<Long, Long> {
+    private fun getDateRange(period: ReportPeriod, now: Long, offset: Int, customRange: Pair<Long, Long>?): Pair<Long, Long> {
+        if (period == ReportPeriod.CUSTOM_RANGE && customRange != null) {
+            return customRange
+        }
         val baseCalendar = Calendar.getInstance().apply { 
             timeInMillis = now
             add(Calendar.DAY_OF_YEAR, offset) 
@@ -230,6 +245,10 @@ class ReportViewModel(
                 val cal = Calendar.getInstance().apply { timeInMillis = adjustedNow }
                 cal.add(Calendar.DAY_OF_YEAR, -364)
                 startOfDay(cal.timeInMillis) to adjustedNow
+            }
+            ReportPeriod.CUSTOM_RANGE -> {
+                val start = startOfDay(now)
+                start to (start + 24 * 3600 * 1000 - 1)
             }
         }
     }
