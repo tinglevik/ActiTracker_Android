@@ -298,10 +298,6 @@ class ActivityTrackerService : Service() {
 
             if (bitmap != null) {
                 itemView.setViewVisibility(
-                    R.id.activity_icon,
-                    View.GONE
-                )
-                itemView.setViewVisibility(
                     R.id.activity_icon_image,
                     View.VISIBLE
                 )
@@ -316,18 +312,8 @@ class ActivityTrackerService : Service() {
                     activityColor)
             } else {
                 itemView.setViewVisibility(
-                    R.id.activity_icon,
-                    View.VISIBLE)
-                itemView.setViewVisibility(
                     R.id.activity_icon_image,
                     View.GONE)
-                itemView.setTextViewText(
-                    R.id.activity_icon,
-                    IconMapper.getEmoji()
-                )
-                /**
-                 * Note: emojis cannot be easily tinted here, they use their own colors
-                 */
             }
 
             itemView.setTextViewText(R.id.activity_name, activity.name)

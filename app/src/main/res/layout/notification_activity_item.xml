@@ -22,33 +22,15 @@
         android:gravity="center">
 
         <!-- Container for Icon -->
-        <FrameLayout
+        <ImageView
+            android:id="@+id/activity_icon_image"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_gravity="center">
-
-            <!-- TextView for Emoji-icons -->
-            <TextView
-                android:id="@+id/activity_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                tools:text="🍎" />
-
-            <!-- ImageView for SVG/Vector icons -->
-            <ImageView
-                android:id="@+id/activity_icon_image"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                tools:src="@drawable/ic_today_outline"
-                android:contentDescription="@null" />
-        </FrameLayout>
+            android:padding="2dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/ic_today_outline"
+            android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/activity_active_indicator"

@@ -7,8 +7,7 @@ data class IconInfo(
     val icon: ImageVector? = null,
     val assetPath: String? = null,
     val category: String,
-    val tags: List<String>,
-    val emoji: String = "●"
+    val tags: List<String>
 )
 
 object IconMapper {
@@ -26,9 +25,6 @@ object IconMapper {
         }
     }
 
-    fun getEmoji(): String {
-        return "●"
-    }
 
     fun getIconInfo(name: String): IconInfo? {
         if (name.contains(":")) {
