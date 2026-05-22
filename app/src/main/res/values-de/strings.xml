@@ -50,7 +50,7 @@
     <string name="settings_content_color_desc">Tippen, um Text- und Symbolfarbe zu ändern</string>
     <string name="settings_about">Über</string>
     <string name="settings_licenses">Open-Source-Lizenzen</string>
-    <string name="settings_licenses_desc">Credits und rechtliche Informationen</string>
+    <string name="settings_licenses_desc">Rechtliche Informationen</string>
     <string name="contrast_warning_background">Wählen Sie einen Hintergrund, der gut mit Ihrer Textfarbe kontrastiert</string>
     <string name="contrast_warning_text">Wählen Sie eine Textfarbe, die gut mit Ihrem Hintergrund kontrastiert</string>
     <string name="settings_reverted">Änderungen rückgängig gemacht</string>

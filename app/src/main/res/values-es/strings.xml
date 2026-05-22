@@ -50,7 +50,7 @@
     <string name="settings_content_color_desc">Toque para cambiar el color de texto e iconos</string>
     <string name="settings_about">Acerca de</string>
     <string name="settings_licenses">Licencias de código abierto</string>
-    <string name="settings_licenses_desc">Créditos e información legal</string>
+    <string name="settings_licenses_desc">Información legal</string>
     <string name="contrast_warning_background">Elija un fondo que contraste bien con el color de su texto</string>
     <string name="contrast_warning_text">Elija un color de texto que contraste bien con su fondo</string>
     <string name="settings_reverted">Cambios revertidos</string>

@@ -50,7 +50,7 @@
     <string name="settings_content_color_desc">Нажмите, чтобы изменить цвет текста и иконок</string>
     <string name="settings_about">О приложении</string>
     <string name="settings_licenses">Лицензии ПО</string>
-    <string name="settings_licenses_desc">Авторы и правовая информация</string>
+    <string name="settings_licenses_desc">Правовая информация</string>
     <string name="contrast_warning_background">Выберите цвет фона, который хорошо контрастирует с цветом текста</string>
     <string name="contrast_warning_text">Выберите цвет текста, который хорошо контрастирует с цветом фона</string>
     <string name="settings_reverted">Изменения отменены</string>

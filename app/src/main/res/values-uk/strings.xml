@@ -50,7 +50,7 @@
     <string name="settings_content_color_desc">Натисніть, щоб змінити колір тексту та іконок</string>
     <string name="settings_about">Про додаток</string>
     <string name="settings_licenses">Ліцензії ПЗ</string>
-    <string name="settings_licenses_desc">Автори та правова інформація</string>
+    <string name="settings_licenses_desc">Правова інформація</string>
     <string name="contrast_warning_background">Виберіть колір фону, який добре контрастує з кольором тексту</string>
     <string name="contrast_warning_text">Виберіть колір тексту, який добре контрастує з кольором фону</string>
     <string name="settings_reverted">Зміни скасовано</string>
