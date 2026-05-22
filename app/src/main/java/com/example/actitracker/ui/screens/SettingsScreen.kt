@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -91,6 +91,10 @@ fun SettingsScreen(
 ) {
     val backgroundColorState by settingsViewModel.backgroundColor.collectAsState()
     val savedContentColor by settingsViewModel.contentColor.collectAsState()
+    val snackbarMessage by settingsViewModel.snackbarMessage.collectAsState()
+    val dimScreen by settingsViewModel.dimScreen.collectAsState()
+    val highlightDataManagement by settingsViewModel.highlightDataManagement.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(shouldHighlight) {
         if (shouldHighlight) {
@@ -99,28 +103,52 @@ fun SettingsScreen(
     }
 
     SettingsScreenContent(
-        settingsViewModel = settingsViewModel,
         backgroundColorState = backgroundColorState,
         savedContentColor = savedContentColor,
+        snackbarMessage = snackbarMessage,
+        dimScreen = dimScreen,
+        highlightDataManagement = highlightDataManagement,
         onBackgroundColorChange = { settingsViewModel.saveBackgroundColor(it) },
         onContentColorChange = { settingsViewModel.saveContentColor(it) },
-        onShowWarning = { bg, txt ->
-            settingsViewModel.showWarning(bg, txt)
-        },
+        onShowWarning = { bg, txt -> settingsViewModel.showWarning(bg, txt) },
         onNavigateToLicenses = onNavigateToLicenses,
+        onClearSnackbar = { settingsViewModel.clearSnackbar() },
+        onCreateBackup = { options, onResult ->
+            settingsViewModel.createBackup(
+                options.activities, options.tags, options.goals, options.logs, options.settings, onResult
+            )
+        },
+        onRestoreBackup = { json, options ->
+            settingsViewModel.restoreBackup(
+                json, options.activities, options.tags, options.goals, options.logs, options.settings, context
+            )
+        },
+        onClearData = { options ->
+            settingsViewModel.clearData(
+                options.activities, options.tags, options.goals, options.logs, options.settings, context
+            )
+        },
+        onShowSnackbar = { settingsViewModel.showSnackbar(it) },
         contentColor = contentColor
     )
 }
 
 @Composable
 fun SettingsScreenContent(
-    settingsViewModel: SettingsViewModel,
     backgroundColorState: Color,
     savedContentColor: Color,
+    snackbarMessage: String?,
+    dimScreen: Boolean,
+    highlightDataManagement: Boolean,
     onBackgroundColorChange: (Color) -> Unit,
     onContentColorChange: (Color) -> Unit,
     onShowWarning: (Color, Color) -> Unit,
     onNavigateToLicenses: () -> Unit,
+    onClearSnackbar: () -> Unit,
+    onCreateBackup: (BackupOptions, (String) -> Unit) -> Unit,
+    onRestoreBackup: (String, BackupOptions) -> Unit,
+    onClearData: (BackupOptions) -> Unit,
+    onShowSnackbar: (String) -> Unit,
     contentColor: Color = Color.Black
 ) {
     var colorPickerTarget by remember { mutableStateOf<ColorPickerTarget?>(null) }
@@ -133,7 +161,7 @@ fun SettingsScreenContent(
     var showImportExportDialog by remember { mutableStateOf(false) }
     var showImportFlow by remember { mutableStateOf(false) }
     var importIsConfirmStep by remember { mutableStateOf(false) }
-    
+
     var showClearDataFlow by remember { mutableStateOf(false) }
     var clearDataIsConfirmStep by remember { mutableStateOf(false) }
 
@@ -149,22 +177,16 @@ fun SettingsScreenContent(
     ) { uri ->
         uri?.let {
             exportOptions?.let { options ->
-                settingsViewModel.createBackup(
-                    activities = options.activities,
-                    tags = options.tags,
-                    goals = options.goals,
-                    logs = options.logs,
-                    settings = options.settings
-                ) { json ->
+                onCreateBackup(options) { json ->
                     try {
                         context.contentResolver.openOutputStream(it)?.use { outputStream ->
                             OutputStreamWriter(outputStream).use { writer ->
                                 writer.write(json)
                             }
                         }
-                        settingsViewModel.showSnackbar(exportSuccessMessage)
+                        onShowSnackbar(exportSuccessMessage)
                     } catch (e: Exception) {
-                        settingsViewModel.showSnackbar("Export failed: ${e.message}")
+                        onShowSnackbar("Export failed: ${e.message}")
                     }
                 }
             }
@@ -182,7 +204,7 @@ fun SettingsScreenContent(
                     showImportFlow = true
                 }
             } catch (e: Exception) {
-                settingsViewModel.showSnackbar("Import failed: ${e.message}")
+                onShowSnackbar("Import failed: ${e.message}")
             }
         }
     }
@@ -236,24 +258,24 @@ fun SettingsScreenContent(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarMessage by settingsViewModel.snackbarMessage.collectAsState()
-    val dimScreen by settingsViewModel.dimScreen.collectAsState()
 
     Scaffold(
         containerColor = backgroundColorState,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { paddingValues ->
+    ) { innerPadding ->
 
         LaunchedEffect(snackbarMessage) {
             snackbarMessage?.let {
                 snackbarHostState.showSnackbar(it)
-                settingsViewModel.clearSnackbar()
+                onClearSnackbar()
             }
         }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .alpha(if (dimScreen) 0.5f else 1.0f)
         ) {
             when {
@@ -262,13 +284,10 @@ fun SettingsScreenContent(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
                     ) {
                         ColorPickerScreen(
                             modifier = Modifier
                                 .fillMaxSize()
-//                                .statusBarsPadding()
-                                .navigationBarsPadding()
                                 .imePadding(),
                             initialColor = if (isBackground)
                                 backgroundColorState else savedContentColor,
@@ -288,10 +307,10 @@ fun SettingsScreenContent(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(16.dp)
+                            .padding(horizontal = 16.dp)
                             .verticalScroll(rememberScrollState())
                     ) {
+                        Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = stringResource(R.string.settings_title),
                             fontSize = 24.sp,
@@ -341,9 +360,7 @@ fun SettingsScreenContent(
                             subtitle = stringResource(R.string.settings_import_export_desc),
                             icon = Icons.Default.SaveAlt,
                             onClick = { showImportExportDialog = true },
-                            highlight = settingsViewModel
-                                .highlightDataManagement.collectAsState()
-                                .value
+                            highlight = highlightDataManagement
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -352,9 +369,9 @@ fun SettingsScreenContent(
                             title = stringResource(R.string.settings_clear_data),
                             subtitle = stringResource(R.string.settings_clear_data_desc),
                             icon = Icons.Default.Delete,
-                            onClick = { 
+                            onClick = {
                                 clearDataIsConfirmStep = false
-                                showClearDataFlow = true 
+                                showClearDataFlow = true
                             }
                         )
 
@@ -406,15 +423,7 @@ fun SettingsScreenContent(
                         importIsConfirmStep = true
                     },
                     onFinalConfirm = {
-                        settingsViewModel.restoreBackup(
-                            json = importJsonContent!!,
-                            activities = pendingImportOptions!!.activities,
-                            tags = pendingImportOptions!!.tags,
-                            goals = pendingImportOptions!!.goals,
-                            logs = pendingImportOptions!!.logs,
-                            settings = pendingImportOptions!!.settings,
-                            context = context
-                        )
+                        onRestoreBackup(importJsonContent!!, pendingImportOptions!!)
                         showImportFlow = false
                         showImportExportDialog = false
                         importJsonContent = null
@@ -433,14 +442,7 @@ fun SettingsScreenContent(
                         clearDataIsConfirmStep = true
                     },
                     onFinalConfirm = {
-                        settingsViewModel.clearData(
-                            activities = pendingClearOptions!!.activities,
-                            tags = pendingClearOptions!!.tags,
-                            goals = pendingClearOptions!!.goals,
-                            logs = pendingClearOptions!!.logs,
-                            settings = pendingClearOptions!!.settings,
-                            context = context
-                        )
+                        onClearData(pendingClearOptions!!)
                         showClearDataFlow = false
                         pendingClearOptions = null
                     }
@@ -945,6 +947,22 @@ private fun SettingsActionCard(
 @Composable
 fun SettingsScreenPreview() {
     ActitrackerTheme {
-        // Preview with dummy data
+        SettingsScreenContent(
+            backgroundColorState = Color.White,
+            savedContentColor = Color.Black,
+            snackbarMessage = null,
+            dimScreen = false,
+            highlightDataManagement = false,
+            onBackgroundColorChange = {},
+            onContentColorChange = {},
+            onShowWarning = { _, _ -> },
+            onNavigateToLicenses = {},
+            onClearSnackbar = {},
+            onCreateBackup = { _, _ -> },
+            onRestoreBackup = { _, _ -> },
+            onClearData = { _ -> },
+            onShowSnackbar = {},
+            contentColor = Color.Black
+        )
     }
 }
