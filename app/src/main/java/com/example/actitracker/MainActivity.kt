@@ -12,27 +12,32 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalRippleConfiguration
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -40,10 +45,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -139,7 +146,13 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    bottomBar = { BottomNavBar(navController) },
+                    containerColor = backgroundColor,
+                    bottomBar = { 
+                        BottomNavBar(
+                            navController = navController,
+                            contentColor = contentColor
+                        )
+                    },
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
                 ) { innerPadding ->
                     Box(modifier = Modifier.fillMaxSize()) {
@@ -159,9 +172,7 @@ class MainActivity : ComponentActivity() {
                             NavHost(
                                 navController = navController,
                                 startDestination = "today",
-                                modifier = Modifier
-                                    .padding(innerPadding)
-                                    .background(backgroundColor)
+                                modifier = Modifier.padding(innerPadding)
                             ) {
                                 composable("today") {
                                     val ticker by todayViewModel.ticker.collectAsState()
@@ -255,87 +266,133 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun BottomNavBar(navController: NavHostController) {
-        val items = listOf(
-            BottomNavItem.Today to R.string.nav_today,
-            BottomNavItem.Report to R.string.nav_report,
-            BottomNavItem.Settings to R.string.nav_settings
-        )
+}
 
-        CompositionLocalProvider(LocalRippleConfiguration provides null) {
-            NavigationBar(
-                modifier = Modifier.height(48.dp),
-                containerColor = MaterialTheme.colorScheme.background,
-                tonalElevation = 0.dp
-            ) {
-                val currentRoute =
-                    navController.currentBackStackEntryAsState().value?.destination?.route
-                items.forEach { (item, labelRes) ->
-                    val label = stringResource(labelRes)
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            navController.popBackStack("manage", inclusive = true)
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            val isSelected = currentRoute == item.route
-                            Icon(
-                                painter = painterResource(id = if (isSelected) item.selectedIcon else item.unselectedIcon),
-                                contentDescription = label,
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .offset(y = 8.dp)
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = label,
-                                fontSize = 10.sp,
-                            )
-                        },
-                        alwaysShowLabel = true,
-                        colors = NavigationBarItemDefaults.colors(
-                            indicatorColor = Color.Transparent,
-                            selectedIconColor = LocalContentColor.current,
-                            selectedTextColor = LocalContentColor.current,
-                            unselectedIconColor = LocalContentColor.current.copy(alpha = 0.6f),
-                            unselectedTextColor = LocalContentColor.current.copy(alpha = 0.6f)
-                        ),
-                        interactionSource = remember { MutableInteractionSource() }
-                    )
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomNavBar(
+    navController: NavHostController,
+    contentColor: Color
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    BottomNavBarContent(
+        currentRoute = currentRoute,
+        contentColor = contentColor,
+        onItemClick = { item ->
+            navController.popBackStack("manage", inclusive = true)
+            navController.navigate(item.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
                 }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomNavBarContent(
+    currentRoute: String?,
+    contentColor: Color,
+    onItemClick: (BottomNavItem) -> Unit
+) {
+    val items = listOf(
+        BottomNavItem.Today to R.string.nav_today,
+        BottomNavItem.Report to R.string.nav_report,
+        BottomNavItem.Settings to R.string.nav_settings
+    )
+
+    CompositionLocalProvider(
+        LocalRippleConfiguration provides null,
+        LocalContentColor provides contentColor
+    ) {
+        Surface(
+            color = Color.White,
+            tonalElevation = 0.dp
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items.forEach { (item, labelRes) ->
+                        val isSelected = currentRoute?.substringBefore("?") == item.route
+                        val label = stringResource(labelRes)
+                        NavigationBarItem(
+                            selected = isSelected,
+                            onClick = { onItemClick(item) },
+                            modifier = Modifier.offset(y = 6.dp),
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = if (isSelected) item.selectedIcon else item.unselectedIcon),
+                                    contentDescription = label,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = label,
+                                    fontSize = 10.sp,
+                                    modifier = Modifier.offset(y = (-6).dp)
+                                )
+                            },
+                            alwaysShowLabel = true,
+                            colors = NavigationBarItemDefaults.colors(
+                                indicatorColor = Color.Transparent,
+                                selectedIconColor = LocalContentColor.current,
+                                selectedTextColor = LocalContentColor.current,
+                                unselectedIconColor = LocalContentColor.current.copy(alpha = 0.6f),
+                                unselectedTextColor = LocalContentColor.current.copy(alpha = 0.6f)
+                            ),
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
+                    }
+                }
+                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
             }
         }
     }
+}
 
-    sealed class BottomNavItem(
-        val route: String,
-        @param:DrawableRes val selectedIcon: Int,
-        @param:DrawableRes val unselectedIcon: Int
-    ) {
-        object Today : BottomNavItem(
-            "today",
-            R.drawable.ic_today_filled,
-            R.drawable.ic_today_outline
-        )
+sealed class BottomNavItem(
+    val route: String,
+    @param:DrawableRes val selectedIcon: Int,
+    @param:DrawableRes val unselectedIcon: Int
+) {
+    object Today : BottomNavItem(
+        "today",
+        R.drawable.ic_today_filled,
+        R.drawable.ic_today_outline
+    )
 
-        object Report : BottomNavItem(
-            "report",
-            R.drawable.ic_pie_chart_filled,
-            R.drawable.ic_pie_chart_outline
-        )
+    object Report : BottomNavItem(
+        "report",
+        R.drawable.ic_pie_chart_filled,
+        R.drawable.ic_pie_chart_outline
+    )
 
-        object Settings : BottomNavItem(
-            "settings", R.drawable.ic_settings_filled, R.drawable.ic_settings_outline
+    object Settings : BottomNavItem(
+        "settings",
+        R.drawable.ic_settings_filled,
+        R.drawable.ic_settings_outline
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomNavBarPreview() {
+    ActitrackerTheme {
+        BottomNavBarContent(
+            currentRoute = "today",
+            contentColor = Color(0xFF1C1B1F),
+            onItemClick = {}
         )
     }
 }

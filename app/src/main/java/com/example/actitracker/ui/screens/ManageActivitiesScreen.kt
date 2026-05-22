@@ -124,6 +124,7 @@ fun ManageActivitiesScreen(
         modifier = modifier,
         containerColor = dialogBackgroundColor,
         contentColor = dialogContentColor,
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
         topBar = {
             Column(
                 modifier = Modifier

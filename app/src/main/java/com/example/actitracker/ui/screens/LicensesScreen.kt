@@ -25,6 +25,7 @@ fun LicensesScreen(
     contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings_licenses), color = contentColor) },
