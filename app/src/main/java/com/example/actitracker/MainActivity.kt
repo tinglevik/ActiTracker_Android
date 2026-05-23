@@ -147,7 +147,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     containerColor = backgroundColor,
-                    bottomBar = { 
+                    bottomBar = {
                         BottomNavBar(
                             navController = navController,
                             contentColor = contentColor
@@ -181,8 +181,12 @@ class MainActivity : ComponentActivity() {
                                         activities = activities,
                                         activeActivityId = activeActivityId,
                                         ticker = ticker,
-                                        onStartActivity = { todayViewModel.startActivity(it) },
-                                        onStopActivity = { todayViewModel.stopActivity(it) },
+                                        onStartActivity = {
+                                            todayViewModel.startActivity(it)
+                                        },
+                                        onStopActivity = {
+                                            todayViewModel.stopActivity(it)
+                                        },
                                         onManageClick = {
                                             navController.navigate("manage") {
                                                 launchSingleTop = true
@@ -195,8 +199,12 @@ class MainActivity : ComponentActivity() {
                                         allTags = tags,
                                         backgroundColor = backgroundColor,
                                         contentColor = contentColor,
-                                        onQuickPanelToggle = { todayViewModel.toggleQuickPanel(it) },
-                                        onReorderActivities = { todayViewModel.reorderActivities(it) }
+                                        onQuickPanelToggle = {
+                                            todayViewModel.toggleQuickPanel(it)
+                                        },
+                                        onReorderActivities = {
+                                            todayViewModel.reorderActivities(it)
+                                        }
                                     )
                                 }
 
@@ -204,15 +212,23 @@ class MainActivity : ComponentActivity() {
                                     ManageActivitiesScreen(
                                         navController = navController,
                                         activities = activities,
-                                        onActivityUpdate = { todayViewModel.updateActivity(it) },
+                                        onActivityUpdate = {
+                                            todayViewModel.updateActivity(it)
+                                        },
                                         onActivityCreate = { todayViewModel.addActivity(it) },
-                                        onActivityDelete = { todayViewModel.deleteActivity(it) },
-                                        onReorderActivities = { todayViewModel.reorderActivities(it) },
+                                        onActivityDelete = {
+                                            todayViewModel.deleteActivity(it)
+                                        },
+                                        onReorderActivities = {
+                                            todayViewModel.reorderActivities(it)
+                                        },
                                         tags = tags,
                                         onTagUpdate = { todayViewModel.updateTag(it) },
                                         onTagCreate = { todayViewModel.addTag(it) },
                                         onTagDelete = { todayViewModel.deleteTag(it) },
-                                        onReorderTags = { todayViewModel.reorderTags(it) },
+                                        onReorderTags = {
+                                            todayViewModel.reorderTags(it)
+                                        },
                                         goals = goals,
                                         onGoalUpdate = { todayViewModel.updateGoal(it) },
                                         onGoalCreate = { todayViewModel.addGoal(it) },
@@ -230,8 +246,12 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
 
-                                composable("settings?highlight={highlight}") { backStackEntry ->
-                                    val highlight = backStackEntry.arguments?.getString("highlight") == "true"
+                                composable(
+                                    "settings?highlight={highlight}"
+                                ) { backStackEntry ->
+                                    val highlight =
+                                        backStackEntry
+                                            .arguments?.getString("highlight") == "true"
                                     SettingsScreen(
                                         settingsViewModel = settingsViewModel,
                                         onNavigateToLicenses = {
@@ -323,7 +343,8 @@ fun BottomNavBarContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     items.forEach { (item, labelRes) ->
-                        val isSelected = currentRoute?.substringBefore("?") == item.route
+                        val isSelected =
+                            currentRoute?.substringBefore("?") == item.route
                         val label = stringResource(labelRes)
                         NavigationBarItem(
                             selected = isSelected,
@@ -331,7 +352,11 @@ fun BottomNavBarContent(
                             modifier = Modifier.offset(y = 6.dp),
                             icon = {
                                 Icon(
-                                    painter = painterResource(id = if (isSelected) item.selectedIcon else item.unselectedIcon),
+                                    painter = painterResource(
+                                        id =
+                                            if (isSelected) item.selectedIcon
+                                            else item.unselectedIcon
+                                    ),
                                     contentDescription = label,
                                     modifier = Modifier.size(24.dp)
                                 )
