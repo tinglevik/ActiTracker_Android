@@ -271,12 +271,19 @@ class ActivityTrackerService : Service() {
             "setBackgroundColor",
             backgroundColor
         )
-        views.setTextColor(R.id.notification_app_name, contentColor)
-        views.setInt(
-            R.id.notification_app_icon,
-            "setColorFilter",
-            contentColor
-        )
+
+        // Show header only on older Android versions (before Android 12 / S)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            views.setViewVisibility(R.id.notification_header, View.VISIBLE)
+            views.setTextColor(R.id.notification_app_name, contentColor)
+            views.setInt(
+                R.id.notification_app_icon,
+                "setColorFilter",
+                contentColor
+            )
+        } else {
+            views.setViewVisibility(R.id.notification_header, View.GONE)
+        }
 
         views.removeAllViews(R.id.notification_activities_container)
 
