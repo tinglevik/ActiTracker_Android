@@ -3,4 +3,5 @@
     <!-- Margins for custom notification (since we're removing DecoratedCustomViewStyle) -->
     <dimen name="notification_horizontal_margin">6dp</dimen>
     <dimen name="notification_activity_item_padding_vertical">4dp</dimen>
+    <dimen name="color_picker_top_icon_size">60dp</dimen>
 </resources>

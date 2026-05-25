@@ -21,8 +21,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +46,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -178,36 +182,61 @@ fun ReportScreenContent(
     }
 
     val scrollState = rememberLazyListState()
+    var expanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Period selection tabs
-        Row(modifier = Modifier.fillMaxWidth()) {
-            ReportPeriod.entries.forEach { p ->
-                val isSelected = p == period
-                Column(modifier = Modifier.weight(1f)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onPeriodSelected(p) }
-                    ) {
-                        Text(
-                            text = stringResource(p.displayNameRes),
-                            color = contentColor,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(vertical = 8.dp)
-                        )
-                    }
-                    if (isSelected) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(3.dp)
-                                .background(contentColor)
-                        )
-                    }
+        // Period selection dropdown
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
+                .padding(vertical = 12.dp, horizontal = ReportScreenDimens.paddingGeneral)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(period.displayNameRes),
+                    color = contentColor,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .fillMaxWidth(0.9f) // Allow it to be wide but not clipped by screen edges
+                    .background(backgroundColor)
+            ) {
+                ReportPeriod.entries.forEach { p ->
+                    val isSelected = p == period
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(p.displayNameRes),
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else contentColor,
+                                style = if (isSelected) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        onClick = {
+                            onPeriodSelected(p)
+                            expanded = false
+                        }
+                    )
                 }
             }
         }

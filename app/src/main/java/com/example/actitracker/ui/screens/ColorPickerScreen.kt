@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -119,7 +122,9 @@ fun ColorPickerScreen(
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
-    androidx.compose.runtime.CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides contentColor) {
+    androidx.compose.runtime.CompositionLocalProvider(
+        androidx.compose.material3.LocalContentColor provides contentColor
+    ) {
         Column(
             modifier = modifier
                 .background(backgroundColor)
@@ -143,7 +148,8 @@ fun ColorPickerScreen(
                         painter = painterResource(R.drawable.ic_close),
                         contentDescription = stringResource(R.string.cancel_button),
                         tint = Color.Red,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.color_picker_top_icon_size))
                     )
                 }
 
@@ -159,7 +165,8 @@ fun ColorPickerScreen(
                         painter = painterResource(R.drawable.ic_check),
                         contentDescription = stringResource(R.string.color_picker_confirm),
                         tint = Color(0xFF4CAF50),
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.color_picker_top_icon_size))
                     )
                 }
             }
@@ -192,40 +199,53 @@ fun ColorPickerScreen(
                 }
             }
 
-//        Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    stringResource(R.string.color_picker_current),
-                    modifier = Modifier.padding(end = 8.dp),
-                    color = contentColor
-                )
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Text(
+                        stringResource(R.string.color_picker_current),
+                        modifier = Modifier.padding(end = 12.dp),
+                        color = contentColor
+                    )
+                }
+
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(64.dp)
                         .clip(CircleShape)
-                        .background(initialColor)
                         .border(2.dp, Color.Gray, CircleShape)
-                )
+                ) {
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                                .background(initialColor)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                                .background(selectedColor)
+                        )
+                    }
+                }
 
-                Spacer(modifier = Modifier.width(24.dp))
-
-                Text(
-                    stringResource(R.string.color_picker_new),
-                    modifier = Modifier.padding(end = 8.dp),
-                    color = contentColor
-                )
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(selectedColor)
-                        .border(2.dp, Color.Gray, CircleShape)
-                )
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        stringResource(R.string.color_picker_new),
+                        modifier = Modifier.padding(start = 12.dp),
+                        color = contentColor
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
