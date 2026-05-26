@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -43,7 +44,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -58,6 +58,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +67,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.actitracker.R
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
 import com.example.actitracker.ui.components.ContrastUtils
 import com.example.actitracker.ui.theme.ActitrackerTheme
 import com.example.actitracker.viewmodel.SettingsViewModel
@@ -115,17 +117,33 @@ fun SettingsScreen(
         onClearSnackbar = { settingsViewModel.clearSnackbar() },
         onCreateBackup = { options, onResult ->
             settingsViewModel.createBackup(
-                options.activities, options.tags, options.goals, options.logs, options.settings, onResult
+                options.activities,
+                options.tags,
+                options.goals,
+                options.logs,
+                options.settings,
+                onResult
             )
         },
         onRestoreBackup = { json, options ->
             settingsViewModel.restoreBackup(
-                json, options.activities, options.tags, options.goals, options.logs, options.settings, context
+                json,
+                options.activities,
+                options.tags,
+                options.goals,
+                options.logs,
+                options.settings,
+                context
             )
         },
         onClearData = { options ->
             settingsViewModel.clearData(
-                options.activities, options.tags, options.goals, options.logs, options.settings, context
+                options.activities,
+                options.tags,
+                options.goals,
+                options.logs,
+                options.settings,
+                context
             )
         },
         onShowSnackbar = { settingsViewModel.showSnackbar(it) },
@@ -311,6 +329,7 @@ fun SettingsScreenContent(
                             .verticalScroll(rememberScrollState())
                     ) {
                         Spacer(modifier = Modifier.height(12.dp))
+
                         Text(
                             text = stringResource(R.string.settings_title),
                             fontSize = 24.sp,
@@ -391,6 +410,8 @@ fun SettingsScreenContent(
                             icon = Icons.Default.Description,
                             onClick = onNavigateToLicenses
                         )
+
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
@@ -575,18 +596,31 @@ fun ImportFlowContainer(
                 exit = fadeOut(tween(1500))
             ) {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(0.85f).wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        Text(stringResource(R.string.import_title), color = fixedTitleColor, fontSize = 24.sp)
+                        Text(
+                            stringResource(R.string.import_title),
+                            color = fixedTitleColor,
+                            fontSize = 24.sp
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(stringResource(R.string.import_confirm_desc), color = fixedTitleColor.copy(alpha = 0.7f), fontSize = 14.sp)
+                        Text(
+                            stringResource(R.string.import_confirm_desc),
+                            color = fixedTitleColor.copy(alpha = 0.7f),
+                            fontSize = 14.sp
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = activities, onCheckedChange = { activities = it })
-                            Text(stringResource(R.string.export_activities), color = fixedTitleColor)
+                            Text(
+                                stringResource(R.string.export_activities),
+                                color = fixedTitleColor
+                            )
                         }
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = tags, onCheckedChange = { tags = it })
@@ -605,12 +639,22 @@ fun ImportFlowContainer(
                             Text(stringResource(R.string.export_settings), color = fixedTitleColor)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_button)) }
-                            TextButton(onClick = { onGoToConfirm(BackupOptions(activities, tags, goals, logs, settings)) }) {
-                                Text(stringResource(R.string.import_button))
-                            }
-                        }
+                        AdaptiveDialogButtons(
+                            confirmText = stringResource(R.string.import_button),
+                            onConfirm = {
+                                onGoToConfirm(
+                                    BackupOptions(
+                                        activities,
+                                        tags,
+                                        goals,
+                                        logs,
+                                        settings
+                                    )
+                                )
+                            },
+                            onDismiss = onDismiss,
+                            dismissContentColor = fixedTitleColor
+                        )
                     }
                 }
             }
@@ -618,21 +662,36 @@ fun ImportFlowContainer(
             // STEP 2: Confirmation (Instant appearance)
             if (isConfirmStep && pendingOptions != null) {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(0.85f).wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        Text(stringResource(R.string.import_confirm_title), color = fixedTitleColor, fontSize = 24.sp)
+                        Text(
+                            stringResource(R.string.import_confirm_title),
+                            color = fixedTitleColor,
+                            fontSize = 24.sp
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(stringResource(R.string.import_confirm_desc), color = fixedTitleColor.copy(alpha = 0.8f))
+                        Text(
+                            stringResource(R.string.import_confirm_desc),
+                            color = fixedTitleColor.copy(alpha = 0.8f)
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(stringResource(R.string.import_confirm_question), color = fixedTitleColor, fontWeight = FontWeight.Bold)
+                        Text(
+                            stringResource(R.string.import_confirm_question),
+                            color = fixedTitleColor,
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(modifier = Modifier.height(24.dp))
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_button)) }
-                            TextButton(onClick = onFinalConfirm) { Text(stringResource(R.string.continue_button)) }
-                        }
+                        AdaptiveDialogButtons(
+                            confirmText = stringResource(R.string.continue_button),
+                            onConfirm = onFinalConfirm,
+                            onDismiss = onDismiss,
+                            dismissContentColor = fixedTitleColor
+                        )
                     }
                 }
             }
@@ -675,16 +734,25 @@ fun ClearDataFlowContainer(
                 exit = fadeOut(tween(1500))
             ) {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(0.85f).wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        Text(stringResource(R.string.clear_data_title), color = fixedTitleColor, fontSize = 24.sp)
+                        Text(
+                            stringResource(R.string.clear_data_title),
+                            color = fixedTitleColor,
+                            fontSize = 24.sp
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = activities, onCheckedChange = { activities = it })
-                            Text(stringResource(R.string.export_activities), color = fixedTitleColor)
+                            Text(
+                                stringResource(R.string.export_activities),
+                                color = fixedTitleColor
+                            )
                         }
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = tags, onCheckedChange = { tags = it })
@@ -703,15 +771,27 @@ fun ClearDataFlowContainer(
                             Text(stringResource(R.string.export_settings), color = fixedTitleColor)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_button)) }
-                            TextButton(
-                                onClick = { onGoToConfirm(BackupOptions(activities, tags, goals, logs, settings)) },
-                                enabled = activities || tags || goals || logs || settings
-                            ) {
-                                Text(stringResource(R.string.clear_button), color = Color.Red)
-                            }
-                        }
+                        AdaptiveDialogButtons(
+                            confirmText = stringResource(R.string.clear_button),
+                            onConfirm = {
+                                onGoToConfirm(
+                                    BackupOptions(
+                                        activities,
+                                        tags,
+                                        goals,
+                                        logs,
+                                        settings
+                                    )
+                                )
+                            },
+                            onDismiss = onDismiss,
+                            confirmEnabled = activities || tags || goals || logs || settings,
+                            confirmColors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(R.color.delete_button_bg),
+                                contentColor = colorResource(R.color.delete_button_text)
+                            ),
+                            dismissContentColor = fixedTitleColor
+                        )
                     }
                 }
             }
@@ -726,19 +806,36 @@ fun ClearDataFlowContainer(
                 if (pendingOptions.settings) deletedItems.add(stringResource(R.string.export_settings))
 
                 Surface(
-                    modifier = Modifier.fillMaxWidth(0.85f).wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        Text(stringResource(R.string.clear_confirm_title), color = fixedTitleColor, fontSize = 24.sp)
+                        Text(
+                            stringResource(R.string.clear_confirm_title),
+                            color = fixedTitleColor,
+                            fontSize = 24.sp
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(stringResource(R.string.clear_confirm_desc, deletedItems.joinToString(", ")), color = fixedTitleColor.copy(alpha = 0.8f))
+                        Text(
+                            stringResource(
+                                R.string.clear_confirm_desc,
+                                deletedItems.joinToString(", ")
+                            ), color = fixedTitleColor.copy(alpha = 0.8f)
+                        )
                         Spacer(modifier = Modifier.height(24.dp))
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_button)) }
-                            TextButton(onClick = onFinalConfirm) { Text(stringResource(R.string.clear_button), color = Color.Red) }
-                        }
+                        AdaptiveDialogButtons(
+                            confirmText = stringResource(R.string.clear_button),
+                            onConfirm = onFinalConfirm,
+                            onDismiss = onDismiss,
+                            confirmColors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(R.color.delete_button_bg),
+                                contentColor = colorResource(R.color.delete_button_text)
+                            ),
+                            dismissContentColor = fixedTitleColor
+                        )
                     }
                 }
             }
@@ -796,29 +893,21 @@ fun ImportExportDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                onExport(
-                    activities,
-                    tags,
-                    goals,
-                    logs,
-                    settings
-                )
-                onDismiss()
-            }) {
-                Text(stringResource(R.string.export_button))
-            }
+            AdaptiveDialogButtons(
+                confirmText = stringResource(R.string.export_button),
+                onConfirm = {
+                    onExport(activities, tags, goals, logs, settings)
+                    onDismiss()
+                },
+                onDismiss = onDismiss,
+                deleteText = stringResource(R.string.import_button),
+                onDelete = onImport,
+                deleteContainerColor = Color.Transparent, // Transparent since it's an action, not deletion
+                deleteContentColor = MaterialTheme.colorScheme.primary, // Using primary for non-destructive action
+                dismissContentColor = fixedTitleColor
+            )
         },
-        dismissButton = {
-            Row {
-                TextButton(onClick = onImport) {
-                    Text(stringResource(R.string.import_button))
-                }
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel_button))
-                }
-            }
-        }
+        dismissButton = null
     )
 }
 
