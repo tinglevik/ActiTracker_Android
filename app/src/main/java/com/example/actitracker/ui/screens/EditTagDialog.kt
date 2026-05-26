@@ -3,6 +3,7 @@ package com.example.actitracker.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -64,7 +66,7 @@ fun EditTagDialog(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
+    val dummyFocusRequester = remember { FocusRequester() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -80,6 +82,13 @@ fun EditTagDialog(
         },
         text = {
             Column {
+                Box(
+                    modifier = Modifier
+                        .size(0.dp)
+                        .focusRequester(dummyFocusRequester)
+                        .focusable()
+                )
+
                 OutlinedTextField(
                     value = name,
                     onValueChange = {
@@ -104,8 +113,7 @@ fun EditTagDialog(
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = dialogContentColor,
                         unfocusedTextColor = dialogContentColor,
@@ -196,7 +204,10 @@ fun EditTagDialog(
         }
     }
 
+    val isInspect = LocalInspectionMode.current
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        if (!isInspect) {
+            dummyFocusRequester.requestFocus()
+        }
     }
 }
