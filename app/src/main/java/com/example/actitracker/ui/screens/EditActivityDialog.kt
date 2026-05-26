@@ -26,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -51,7 +50,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -66,6 +64,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.actitracker.R
 import com.example.actitracker.data.model.ActivityItem
 import com.example.actitracker.data.model.TagItem
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
 import com.example.actitracker.ui.components.AppIcon
 import com.example.actitracker.ui.theme.ActitrackerTheme
 
@@ -362,8 +361,9 @@ fun EditActivityDialog(
         },
 
         confirmButton = {
-            Button(
-                onClick = {
+            AdaptiveDialogButtons(
+                confirmText = stringResource(R.string.save_button),
+                onConfirm = {
                     if (name.isNotBlank()) {
                         onSave(
                             activity.copy(
@@ -376,41 +376,18 @@ fun EditActivityDialog(
                         )
                     }
                 },
-                enabled = name.isNotBlank(),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(
+                onDismiss = onDismiss,
+                confirmEnabled = name.isNotBlank(),
+                confirmColors = ButtonDefaults.buttonColors(
                     containerColor = dialogContentColor,
                     contentColor = dialogBackgroundColor
-                )
-            ) {
-                Text(stringResource(R.string.save_button))
-            }
+                ),
+                deleteText = if (!isCreating) stringResource(R.string.delete_button) else null,
+                onDelete = if (!isCreating) onDelete else null,
+                dismissContentColor = dialogContentColor
+            )
         },
-
-        dismissButton = {
-            Row {
-                TextButton(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = dialogContentColor
-                    )
-                ) {
-                    Text(stringResource(R.string.cancel_button))
-                }
-
-                if (!isCreating) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
-                        onClick = onDelete,
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.Red
-                        )
-                    ) {
-                        Text(stringResource(R.string.delete_button))
-                    }
-                }
-            }
-        }
+        dismissButton = null
     )
 
     // Color selection dialog

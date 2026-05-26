@@ -1,17 +1,33 @@
 package com.example.actitracker.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.actitracker.R
 import com.example.actitracker.data.model.GoalItem
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
 
 @Composable
 fun EditGoalDialog(
@@ -33,7 +49,13 @@ fun EditGoalDialog(
         containerColor = dialogBackgroundColor,
         titleContentColor = dialogContentColor,
         textContentColor = dialogContentColor,
-        title = { Text(if (isCreating) stringResource(R.string.create_goal_title) else stringResource(R.string.edit_goal_title)) },
+        title = {
+            Text(
+                if (isCreating) stringResource(R.string.create_goal_title) else stringResource(
+                    R.string.edit_goal_title
+                )
+            )
+        },
         text = {
             Column {
                 OutlinedTextField(
@@ -42,7 +64,12 @@ fun EditGoalDialog(
                         name = it
                         isError = false
                     },
-                    label = { Text(stringResource(R.string.goal_name_label), color = dialogContentColor.copy(alpha = 0.7f)) },
+                    label = {
+                        Text(
+                            stringResource(R.string.goal_name_label),
+                            color = dialogContentColor.copy(alpha = 0.7f)
+                        )
+                    },
                     isError = isError,
                     singleLine = true,
                     maxLines = 1,
@@ -60,7 +87,12 @@ fun EditGoalDialog(
                 OutlinedTextField(
                     value = targetHours,
                     onValueChange = { targetHours = it.filter { char -> char.isDigit() } },
-                    label = { Text(stringResource(R.string.target_hours_label), color = dialogContentColor.copy(alpha = 0.7f)) },
+                    label = {
+                        Text(
+                            stringResource(R.string.target_hours_label),
+                            color = dialogContentColor.copy(alpha = 0.7f)
+                        )
+                    },
                     singleLine = true,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -77,42 +109,48 @@ fun EditGoalDialog(
                 Text(stringResource(R.string.goal_period_label), color = dialogContentColor)
                 Row {
                     RadioButton(selected = period == "DAILY", onClick = { period = "DAILY" })
-                    Text(stringResource(R.string.period_daily), modifier = Modifier.padding(start = 8.dp), color = dialogContentColor)
+                    Text(
+                        stringResource(R.string.period_daily),
+                        modifier = Modifier.padding(start = 8.dp),
+                        color = dialogContentColor
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     RadioButton(selected = period == "WEEKLY", onClick = { period = "WEEKLY" })
-                    Text(stringResource(R.string.period_weekly), modifier = Modifier.padding(start = 8.dp), color = dialogContentColor)
+                    Text(
+                        stringResource(R.string.period_weekly),
+                        modifier = Modifier.padding(start = 8.dp),
+                        color = dialogContentColor
+                    )
                 }
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
+            AdaptiveDialogButtons(
+                confirmText = stringResource(R.string.save_button),
+                onConfirm = {
                     if (name.isBlank()) {
                         isError = true
                     } else {
                         val seconds = (targetHours.toLongOrNull() ?: 0L) * 3600
-                        onSave(goal.copy(name = name.trim(), targetSeconds = seconds, period = period))
+                        onSave(
+                            goal.copy(
+                                name = name.trim(),
+                                targetSeconds = seconds,
+                                period = period
+                            )
+                        )
                     }
                 },
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(
+                onDismiss = onDismiss,
+                confirmColors = ButtonDefaults.buttonColors(
                     containerColor = dialogContentColor,
                     contentColor = dialogBackgroundColor
-                )
-            ) { Text(stringResource(R.string.save_button)) }
+                ),
+                deleteText = if (!isCreating) stringResource(R.string.delete_button) else null,
+                onDelete = if (!isCreating) onDelete else null,
+                dismissContentColor = dialogContentColor
+            )
         },
-        dismissButton = {
-            Row {
-                TextButton(onClick = onDismiss, colors = ButtonDefaults.textButtonColors(contentColor = dialogContentColor)) {
-                    Text(stringResource(R.string.cancel_button))
-                }
-                if (!isCreating) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = onDelete, colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)) {
-                        Text(stringResource(R.string.delete_button))
-                    }
-                }
-            }
-        }
+        dismissButton = null
     )
 }

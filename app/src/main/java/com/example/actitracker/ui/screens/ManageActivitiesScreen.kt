@@ -22,7 +22,6 @@ import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,7 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +51,7 @@ import com.example.actitracker.data.model.ActivityItem
 import com.example.actitracker.data.model.GoalItem
 import com.example.actitracker.data.model.TagItem
 import com.example.actitracker.ui.components.ActivityRow
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
 import com.example.actitracker.ui.components.ReorderableLazyColumn
 import com.example.actitracker.ui.components.verticalScrollbar
 import com.example.actitracker.ui.theme.ActitrackerTheme
@@ -470,35 +468,23 @@ fun ManageActivitiesScreen(
                     )
                 },
                 confirmButton = {
-                    Button(
-                        onClick = {
+                    AdaptiveDialogButtons(
+                        confirmText = stringResource(R.string.go_to_settings),
+                        onConfirm = {
                             showRedirectDialog = false
                             navController.navigate("settings?highlight=true") {
                                 launchSingleTop = true
                             }
                         },
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(
+                        onDismiss = { showRedirectDialog = false },
+                        confirmColors = ButtonDefaults.buttonColors(
                             containerColor = dialogBackgroundColor,
                             contentColor = dialogContentColor
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(R.string.go_to_settings),
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                        ),
+                        dismissContentColor = dialogBackgroundColor
+                    )
                 },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showRedirectDialog = false },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = dialogBackgroundColor
-                        )
-                    ) {
-                        Text(stringResource(R.string.cancel_button))
-                    }
-                }
+                dismissButton = null
             )
         }
 
@@ -508,8 +494,9 @@ fun ManageActivitiesScreen(
                 title = { Text(stringResource(R.string.delete_item_title)) },
                 text = { Text(stringResource(R.string.delete_item_confirm)) },
                 confirmButton = {
-                    Button(
-                        onClick = {
+                    AdaptiveDialogButtons(
+                        confirmText = stringResource(R.string.yes_confirm),
+                        onConfirm = {
                             itemToDeleteId?.let { id ->
                                 when (selectedTab) {
                                     ManageTab.ACTIVITIES -> onActivityDelete(id)
@@ -523,18 +510,16 @@ fun ManageActivitiesScreen(
                             editingTag = null
                             editingGoal = null
                         },
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(
+                        onDismiss = {
+                            showDeleteConfirm = false
+                        },
+                        confirmColors = ButtonDefaults.buttonColors(
                             containerColor = Color.Red,
                             contentColor = Color.White
                         )
-                    ) { Text(stringResource(R.string.yes_confirm)) }
+                    )
                 },
-                dismissButton = {
-                    TextButton(onClick = {
-                        showDeleteConfirm = false
-                    }) { Text(stringResource(R.string.cancel_button)) }
-                }
+                dismissButton = null
             )
         }
     }

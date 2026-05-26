@@ -13,19 +13,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -48,6 +44,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.actitracker.R
 import com.example.actitracker.data.model.TagItem
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
 
 @Composable
 fun EditTagDialog(
@@ -92,7 +89,9 @@ fun EditTagDialog(
                     label = {
                         Text(
                             stringResource(R.string.tag_name_label),
-                            color = if (isError) MaterialTheme.colorScheme.error else dialogContentColor.copy(alpha = 0.7f)
+                            color = if (isError) MaterialTheme.colorScheme.error else dialogContentColor.copy(
+                                alpha = 0.7f
+                            )
                         )
                     },
                     isError = isError,
@@ -146,8 +145,9 @@ fun EditTagDialog(
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
+            AdaptiveDialogButtons(
+                confirmText = stringResource(R.string.save_button),
+                onConfirm = {
                     val trimmedName = name.trim()
                     if (trimmedName.isEmpty()) {
                         isError = true
@@ -155,32 +155,18 @@ fun EditTagDialog(
                         onSave(tag.copy(name = trimmedName, color = selectedColor))
                     }
                 },
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(
+                onDismiss = onDismiss,
+                confirmColors = ButtonDefaults.buttonColors(
                     containerColor = dialogContentColor,
                     contentColor = dialogBackgroundColor
-                )
-            ) { Text(stringResource(R.string.save_button)) }
+                ),
+                deleteText = if (!isCreating) stringResource(R.string.delete_button) else null,
+                onDelete = if (!isCreating) onDelete else null,
+                deleteContentColor = MaterialTheme.colorScheme.error,
+                dismissContentColor = dialogContentColor
+            )
         },
-        dismissButton = {
-            Row {
-                TextButton(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.textButtonColors(contentColor = dialogContentColor)
-                ) {
-                    Text(stringResource(R.string.cancel_button))
-                }
-                if (!isCreating) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
-                        onClick = onDelete,
-                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                    ) {
-                        Text(stringResource(R.string.delete_button))
-                    }
-                }
-            }
-        }
+        dismissButton = null
     )
 
     if (showColorPicker) {
