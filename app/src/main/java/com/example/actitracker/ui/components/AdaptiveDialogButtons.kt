@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.actitracker.R
@@ -32,7 +33,8 @@ fun AdaptiveDialogButtons(
     confirmEnabled: Boolean = true,
     deleteText: String? = null,
     onDelete: (() -> Unit)? = null,
-    deleteContentColor: Color = Color.Red
+    deleteContainerColor: Color = colorResource(R.color.delete_button_bg),
+    deleteContentColor: Color = colorResource(R.color.delete_button_text)
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         val isNarrow = maxWidth < 300.dp
@@ -62,10 +64,14 @@ fun AdaptiveDialogButtons(
                 }
 
                 if (deleteText != null && onDelete != null) {
-                    TextButton(
+                    Button(
                         onClick = onDelete,
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.textButtonColors(contentColor = deleteContentColor)
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = deleteContainerColor,
+                            contentColor = deleteContentColor
+                        )
                     ) {
                         Text(deleteText)
                     }
@@ -78,9 +84,13 @@ fun AdaptiveDialogButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (deleteText != null && onDelete != null) {
-                    TextButton(
+                    Button(
                         onClick = onDelete,
-                        colors = ButtonDefaults.textButtonColors(contentColor = deleteContentColor)
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = deleteContainerColor,
+                            contentColor = deleteContentColor
+                        )
                     ) {
                         Text(deleteText)
                     }

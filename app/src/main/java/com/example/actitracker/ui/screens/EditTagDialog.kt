@@ -162,7 +162,6 @@ fun EditTagDialog(
                 ),
                 deleteText = if (!isCreating) stringResource(R.string.delete_button) else null,
                 onDelete = if (!isCreating) onDelete else null,
-                deleteContentColor = MaterialTheme.colorScheme.error,
                 dismissContentColor = dialogContentColor
             )
         },

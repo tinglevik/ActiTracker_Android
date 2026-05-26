@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="ic_launcher_background">#1A237E</color>
     <color name="ic_launcher_accent">#00E5FF</color>
+    <color name="delete_button_bg">#FFFF0000</color>
+    <color name="delete_button_text">#FFEFEFEF</color>
 </resources>
