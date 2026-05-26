@@ -144,9 +144,7 @@ fun EditGoalDialog(
             AdaptiveDialogButtons(
                 confirmText = stringResource(R.string.save_button),
                 onConfirm = {
-                    if (name.isBlank()) {
-                        isError = true
-                    } else {
+                    if (name.isNotBlank()) {
                         val seconds = (targetHours.toLongOrNull() ?: 0L) * 3600
                         onSave(
                             goal.copy(
@@ -158,6 +156,7 @@ fun EditGoalDialog(
                     }
                 },
                 onDismiss = onDismiss,
+                confirmEnabled = name.isNotBlank(),
                 confirmColors = ButtonDefaults.buttonColors(
                     containerColor = dialogContentColor,
                     contentColor = dialogBackgroundColor

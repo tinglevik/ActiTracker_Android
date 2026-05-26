@@ -157,13 +157,12 @@ fun EditTagDialog(
                 confirmText = stringResource(R.string.save_button),
                 onConfirm = {
                     val trimmedName = name.trim()
-                    if (trimmedName.isEmpty()) {
-                        isError = true
-                    } else {
+                    if (trimmedName.isNotEmpty()) {
                         onSave(tag.copy(name = trimmedName, color = selectedColor))
                     }
                 },
                 onDismiss = onDismiss,
+                confirmEnabled = name.isNotBlank(),
                 confirmColors = ButtonDefaults.buttonColors(
                     containerColor = dialogContentColor,
                     contentColor = dialogBackgroundColor
