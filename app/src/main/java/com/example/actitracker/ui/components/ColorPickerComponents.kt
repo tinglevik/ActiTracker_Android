@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
@@ -30,7 +31,8 @@ fun SaturationValuePanel(
     saturation: Float,
     value: Float,
     onSaturationValueChanged: (saturation: Float, value: Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    previousColor: Color? = null
 ) {
     var currentSaturation by remember(saturation) { mutableFloatStateOf(saturation) }
     var currentValue by remember(value) { mutableFloatStateOf(value) }
@@ -60,6 +62,7 @@ fun SaturationValuePanel(
                 }
         ) {
             drawSVPanel(hue)
+            previousColor?.let { drawPreviousSelector(it) }
             drawSelector(currentSaturation, currentValue)
         }
     }
@@ -123,11 +126,35 @@ private fun DrawScope.drawSelector(saturation: Float, value: Float) {
     )
 }
 
+private fun DrawScope.drawPreviousSelector(color: Color) {
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(color.toArgb(), hsv)
+    val s = hsv[1]
+    val v = hsv[2]
+    val x = s * size.width
+    val y = (1f - v) * size.height
+    val radius = 8.dp.toPx()
+
+    drawCircle(
+        color = Color.White.copy(alpha = 0.6f),
+        radius = radius,
+        center = Offset(x, y),
+        style = Stroke(width = 2.dp.toPx())
+    )
+    drawCircle(
+        color = Color.Black.copy(alpha = 0.3f),
+        radius = radius + 1.dp.toPx(),
+        center = Offset(x, y),
+        style = Stroke(width = 1.dp.toPx())
+    )
+}
+
 @Composable
 fun HueBar(
     hue: Float,
     onHueChanged: (Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    previousColor: Color? = null
 ) {
     var currentHue by remember(hue) { mutableFloatStateOf(hue) }
 
@@ -152,6 +179,7 @@ fun HueBar(
             }
     ) {
         drawHueBar()
+        previousColor?.let { drawPreviousHueSelector(it) }
         drawHueSelector(currentHue)
     }
 }
@@ -194,6 +222,23 @@ private fun DrawScope.drawHueSelector(hue: Float) {
         topLeft = Offset(x - selectorWidth / 2, padding),
         size = androidx.compose.ui.geometry.Size(selectorWidth, size.height - padding * 2),
         cornerRadius = androidx.compose.ui.geometry.CornerRadius(3.dp.toPx()),
+        style = Stroke(width = 2.dp.toPx())
+    )
+}
+
+private fun DrawScope.drawPreviousHueSelector(color: Color) {
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(color.toArgb(), hsv)
+    val h = hsv[0]
+    val x = (h / 360f) * size.width
+    val selectorWidth = 4.dp.toPx()
+    val padding = 4.dp.toPx()
+
+    drawRoundRect(
+        color = Color.White.copy(alpha = 0.6f),
+        topLeft = Offset(x - selectorWidth / 2, padding),
+        size = androidx.compose.ui.geometry.Size(selectorWidth, size.height - padding * 2),
+        cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.dp.toPx()),
         style = Stroke(width = 2.dp.toPx())
     )
 }

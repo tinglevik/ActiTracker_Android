@@ -421,7 +421,8 @@ fun EditActivityDialog(
                         .clip(RoundedCornerShape(16.dp))
                         .wrapContentHeight(),
                     backgroundColor = dialogBackgroundColor,
-                    contentColor = dialogContentColor
+                    contentColor = dialogContentColor,
+                    previousColor = activity.color
                 )
             }
         }

@@ -86,7 +86,8 @@ fun ColorPickerScreen(
     modifier: Modifier = Modifier,
     contrastWarning: String? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    previousColor: Color? = null
 ) {
     val initialHsv = remember(initialColor) {
         val hsv = FloatArray(3)
@@ -328,7 +329,8 @@ fun ColorPickerScreen(
                                 R.dimen.color_picker_saturation_panel_corner
                             )
                         )
-                    )
+                    ),
+                previousColor = previousColor
             )
 
             Spacer(
@@ -346,7 +348,9 @@ fun ColorPickerScreen(
                         )
                     )
                     hexError = false
-                })
+                },
+                previousColor = previousColor
+            )
 
             Spacer(
                 modifier = Modifier.height(

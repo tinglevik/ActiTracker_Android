@@ -26,8 +26,10 @@ class SettingsViewModel(
     val showWarningDrawer: StateFlow<Boolean> = _showWarningDrawer
 
     private val _previousBg = MutableStateFlow(Color(SettingsDataStore.DEFAULT_COLOR_ARGB))
+    val previousBg: StateFlow<Color> = _previousBg
 
     private val _previousText = MutableStateFlow(Color.Black)
+    val previousText: StateFlow<Color> = _previousText
 
     private val _snackbarMessage = MutableStateFlow<String?>(null)
     val snackbarMessage: StateFlow<String?> = _snackbarMessage

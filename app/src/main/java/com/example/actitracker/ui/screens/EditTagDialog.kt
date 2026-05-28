@@ -200,7 +200,10 @@ fun EditTagDialog(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .clip(RoundedCornerShape(16.dp))
-                        .wrapContentHeight()
+                        .wrapContentHeight(),
+                    backgroundColor = dialogBackgroundColor,
+                    contentColor = dialogContentColor,
+                    previousColor = tag.color
                 )
             }
         }

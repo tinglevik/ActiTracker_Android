@@ -93,6 +93,9 @@ fun SettingsScreen(
 ) {
     val backgroundColorState by settingsViewModel.backgroundColor.collectAsState()
     val savedContentColor by settingsViewModel.contentColor.collectAsState()
+    val previousBg by settingsViewModel.previousBg.collectAsState()
+    val previousText by settingsViewModel.previousText.collectAsState()
+    val showWarningDrawer by settingsViewModel.showWarningDrawer.collectAsState()
     val snackbarMessage by settingsViewModel.snackbarMessage.collectAsState()
     val dimScreen by settingsViewModel.dimScreen.collectAsState()
     val highlightDataManagement by settingsViewModel.highlightDataManagement.collectAsState()
@@ -107,6 +110,9 @@ fun SettingsScreen(
     SettingsScreenContent(
         backgroundColorState = backgroundColorState,
         savedContentColor = savedContentColor,
+        previousBg = previousBg,
+        previousText = previousText,
+        showWarningDrawer = showWarningDrawer,
         snackbarMessage = snackbarMessage,
         dimScreen = dimScreen,
         highlightDataManagement = highlightDataManagement,
@@ -155,6 +161,9 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     backgroundColorState: Color,
     savedContentColor: Color,
+    previousBg: Color,
+    previousText: Color,
+    showWarningDrawer: Boolean,
     snackbarMessage: String?,
     dimScreen: Boolean,
     highlightDataManagement: Boolean,
@@ -315,8 +324,9 @@ fun SettingsScreenContent(
                                 stringResource(R.string.contrast_warning_text),
                             onColorConfirmed = onColorConfirmedInternal,
                             onDismiss = onDismissInternal,
-                            backgroundColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onBackground
+                            backgroundColor = if (showWarningDrawer) previousBg else MaterialTheme.colorScheme.background,
+                            contentColor = if (showWarningDrawer) previousText else MaterialTheme.colorScheme.onBackground,
+                            previousColor = if (isBackground) previousBg else previousText
                         )
                     }
                 }
@@ -496,8 +506,9 @@ fun SettingsScreenContent(
                                 stringResource(R.string.contrast_warning_text),
                             onColorConfirmed = onColorConfirmedInternal,
                             onDismiss = onDismissInternal,
-                            backgroundColor = backgroundColorState,
-                            contentColor = savedContentColor
+                            backgroundColor = previousBg,
+                            contentColor = previousText,
+                            previousColor = if (isBackground) previousBg else previousText
                         )
                     }
                 }
@@ -1060,6 +1071,9 @@ fun SettingsScreenPreview() {
         SettingsScreenContent(
             backgroundColorState = Color.White,
             savedContentColor = Color.Black,
+            previousBg = Color.White,
+            previousText = Color.Black,
+            showWarningDrawer = false,
             snackbarMessage = null,
             dimScreen = false,
             highlightDataManagement = false,

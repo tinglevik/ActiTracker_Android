@@ -67,8 +67,6 @@ fun LowContrastWarningDrawer(
         Box(
             modifier = Modifier
                 .width(currentWidth)
-                // ✅ CHANGED: use wrapContentHeight() instead of fillMaxHeight()
-                // So the drawer doesn't overlap the buttons at the bottom
                 .wrapContentHeight() 
                 .background(
                     color = DRAWER_BG,
@@ -82,7 +80,7 @@ fun LowContrastWarningDrawer(
                         }
                     }
                 }
-                .padding(vertical = 16.dp) // Add a small internal padding
+                .padding(vertical = 16.dp)
         ) {
             if (isExpanded) {
                 ExpandedDrawer(
