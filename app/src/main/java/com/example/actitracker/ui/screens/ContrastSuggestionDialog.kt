@@ -19,7 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.actitracker.R
+import com.example.actitracker.ui.components.AdaptiveDialogButtons
+import com.example.actitracker.ui.theme.ActitrackerTheme
 
 @Composable
 fun ContrastSuggestionDialog(
@@ -29,7 +33,7 @@ fun ContrastSuggestionDialog(
     suggestions: List<Pair<String, Color>>,
     onSuggestionSelected: (Color) -> Unit,
     onOpenColorPicker: () -> Unit,
-    onKeepAnyway: () -> Unit, // ✅ New callback
+    onKeepAnyway: () -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectedColor by remember { mutableStateOf(suggestions.firstOrNull()?.second) }
@@ -115,40 +119,48 @@ fun ContrastSuggestionDialog(
                 // "Pick manually" button
                 OutlinedButton(
                     onClick = onOpenColorPicker,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RectangleShape
                 ) {
                     Text(
                         if (isBackgroundChange) stringResource(R.string.contrast_pick_text_manual)
                         else stringResource(R.string.contrast_pick_bg_manual)
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // ✅ "Keep anyway" button
-                TextButton(
-                    onClick = onKeepAnyway,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        stringResource(R.string.contrast_keep_anyway),
-                        color = Color(0xFFB71C1C) // Red for warning
-                    )
-                }
             }
         },
         confirmButton = {
-            Button(
-                onClick = { selectedColor?.let { onSuggestionSelected(it) } },
-                enabled = selectedColor != null
-            ) {
-                Text(stringResource(R.string.apply_button))
-            }
+            AdaptiveDialogButtons(
+                confirmText = stringResource(R.string.apply_button),
+                onConfirm = { selectedColor?.let { onSuggestionSelected(it) } },
+                onDismiss = onDismiss,
+                confirmEnabled = selectedColor != null,
+                deleteText = stringResource(R.string.contrast_keep_anyway),
+                onDelete = onKeepAnyway,
+                deleteContentColor = Color.White
+            )
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel_button))
-            }
-        }
+        dismissButton = null
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContrastSuggestionDialogPreview() {
+    ActitrackerTheme {
+        ContrastSuggestionDialog(
+            backgroundColor = Color.White,
+            textColor = Color.LightGray,
+            isBackgroundChange = false,
+            suggestions = listOf(
+                "Black" to Color.Black,
+                "Dark Gray" to Color.DarkGray,
+                "Blue" to Color.Blue
+            ),
+            onSuggestionSelected = {},
+            onOpenColorPicker = {},
+            onKeepAnyway = {},
+            onDismiss = {}
+        )
+    }
 }

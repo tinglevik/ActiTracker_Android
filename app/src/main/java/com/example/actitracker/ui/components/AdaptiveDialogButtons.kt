@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.actitracker.R
 
@@ -52,7 +53,7 @@ fun AdaptiveDialogButtons(
                     modifier = Modifier.fillMaxWidth(),
                     colors = confirmColors
                 ) {
-                    Text(confirmText)
+                    Text(confirmText, textAlign = TextAlign.Center)
                 }
 
                 TextButton(
@@ -61,7 +62,7 @@ fun AdaptiveDialogButtons(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.textButtonColors(contentColor = dismissContentColor)
                 ) {
-                    Text(dismissText)
+                    Text(dismissText, textAlign = TextAlign.Center)
                 }
 
                 if (deleteText != null && onDelete != null) {
@@ -74,7 +75,7 @@ fun AdaptiveDialogButtons(
                             contentColor = deleteContentColor
                         )
                     ) {
-                        Text(deleteText)
+                        Text(deleteText, textAlign = TextAlign.Center)
                     }
                 }
             }
@@ -93,7 +94,7 @@ fun AdaptiveDialogButtons(
                             contentColor = deleteContentColor
                         )
                     ) {
-                        Text(deleteText)
+                        Text(deleteText, textAlign = TextAlign.Center)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -103,7 +104,7 @@ fun AdaptiveDialogButtons(
                     shape = RectangleShape,
                     colors = ButtonDefaults.textButtonColors(contentColor = dismissContentColor)
                 ) {
-                    Text(dismissText)
+                    Text(dismissText, textAlign = TextAlign.Center)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -114,7 +115,7 @@ fun AdaptiveDialogButtons(
                     shape = RectangleShape,
                     colors = confirmColors
                 ) {
-                    Text(confirmText)
+                    Text(confirmText, textAlign = TextAlign.Center)
                 }
             }
         }
