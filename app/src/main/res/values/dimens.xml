@@ -4,4 +4,25 @@
     <dimen name="notification_horizontal_margin">6dp</dimen>
     <dimen name="notification_activity_item_padding_vertical">4dp</dimen>
     <dimen name="color_picker_top_icon_size">60dp</dimen>
+
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="color_picker_title_horizontal_padding">72dp</dimen>
+    <dimen name="color_picker_warning_bottom_padding">8dp</dimen>
+    <dimen name="color_picker_warning_corner">8dp</dimen>
+    <dimen name="color_picker_warning_padding">12dp</dimen>
+    <dimen name="color_picker_info_icon_size">20dp</dimen>
+    <dimen name="color_picker_warning_spacer">8dp</dimen>
+    <dimen name="color_picker_current_new_padding">12dp</dimen>
+    <dimen name="color_picker_divider_width">1dp</dimen>
+    <dimen name="color_picker_preview_height">40dp</dimen>
+    <dimen name="color_picker_preview_corner">12dp</dimen>
+    <dimen name="color_picker_preview_spacer">4dp</dimen>
+    <dimen name="color_picker_saturation_panel_height">250dp</dimen>
+    <dimen name="color_picker_saturation_panel_corner">8dp</dimen>
+    <dimen name="color_picker_hue_bar_spacer">16dp</dimen>
+    <dimen name="color_picker_hex_spacer">16dp</dimen>
+    <dimen name="color_picker_error_text_size">12sp</dimen>
+    <dimen name="color_picker_warning_text_size">13sp</dimen>
+    <dimen name="color_picker_error_top_padding">4dp</dimen>
+    <dimen name="color_picker_bottom_spacer">24dp</dimen>
 </resources>

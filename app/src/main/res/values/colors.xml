@@ -11,4 +11,5 @@
     <color name="ic_launcher_accent">#00E5FF</color>
     <color name="delete_button_bg">#FFFF0000</color>
     <color name="delete_button_text">#FFEFEFEF</color>
+    <color name="color_confirm_green">#FF00CB00</color>
 </resources>

@@ -1,22 +1,20 @@
 package com.example.actitracker.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -42,16 +40,18 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.example.actitracker.R
 import com.example.actitracker.ui.components.HueBar
@@ -103,9 +103,7 @@ fun ColorPickerScreen(
             Color(
                 android.graphics.Color.HSVToColor(
                     floatArrayOf(
-                        hue,
-                        saturation,
-                        value
+                        hue, saturation, value
                     )
                 )
             )
@@ -129,7 +127,7 @@ fun ColorPickerScreen(
             modifier = modifier
                 .background(backgroundColor)
                 .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = dimensionResource(R.dimen.screen_padding))
         ) {
             Box(
                 modifier = Modifier
@@ -138,117 +136,174 @@ fun ColorPickerScreen(
                     .focusable()
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(onClick = onDismiss) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_close),
-                        contentDescription = stringResource(R.string.cancel_button),
-                        tint = Color.Red,
-                        modifier = Modifier
-                            .size(dimensionResource(R.dimen.color_picker_top_icon_size))
-                    )
-                }
-
                 Text(
                     text = stringResource(R.string.color_picker_title),
-                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(
+                            horizontal = dimensionResource(
+                                R.dimen.color_picker_title_horizontal_padding
+                            )
+                        ),
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
                     color = contentColor
                 )
 
-                IconButton(onClick = { onColorConfirmed(selectedColor) }) {
+                IconButton(
+                    onClick = onDismiss, modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.cancel_button),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(
+                            dimensionResource(R.dimen.color_picker_top_icon_size)
+                        )
+                    )
+                }
+
+                IconButton(
+                    onClick = { onColorConfirmed(selectedColor) },
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_check),
                         contentDescription = stringResource(R.string.color_picker_confirm),
-                        tint = Color(0xFF4CAF50),
-                        modifier = Modifier
-                            .size(dimensionResource(R.dimen.color_picker_top_icon_size))
+                        tint = colorResource(R.color.color_confirm_green),
+                        modifier = Modifier.size(
+                            dimensionResource(R.dimen.color_picker_top_icon_size)
+                        )
                     )
                 }
             }
 
             if (contrastWarning != null) {
                 Surface(
-                    color = contentColor.copy(alpha = 0.08f),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
+                    color = contentColor.copy(alpha = 0.08f), shape = RoundedCornerShape(
+                        dimensionResource(R.dimen.color_picker_warning_corner)
+                    ), modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
+                        .padding(
+                            bottom = dimensionResource(
+                                R.dimen.color_picker_warning_bottom_padding
+                            )
+                        )
                 ) {
                     Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.padding(
+                            dimensionResource(R.dimen.color_picker_warning_padding)
+                        ), verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_info_outline),
                             contentDescription = stringResource(R.string.info_desc),
                             tint = contentColor,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(
+                                dimensionResource(R.dimen.color_picker_info_icon_size)
+                            )
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(
+                            modifier = Modifier.width(
+                                dimensionResource(R.dimen.color_picker_warning_spacer)
+                            )
+                        )
                         Text(
                             text = contrastWarning,
                             color = contentColor,
-                            fontSize = 13.sp
-                        )
+                            fontSize = with(LocalDensity.current) {
+                                dimensionResource(
+                                    R.dimen.color_picker_warning_text_size
+                                ).toSp()
+                            })
                     }
                 }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center
             ) {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.CenterEnd
+                Row(
+                    modifier = Modifier.height(IntrinsicSize.Min)
                 ) {
                     Text(
-                        stringResource(R.string.color_picker_current),
-                        modifier = Modifier.padding(end = 12.dp),
-                        color = contentColor
+                        text = stringResource(R.string.color_picker_current),
+                        modifier = Modifier
+                            .padding(
+                                end = dimensionResource(
+                                    R.dimen.color_picker_current_new_padding
+                                )
+                            )
+                            .weight(1f),
+                        color = contentColor,
+                        textAlign = TextAlign.End
+                    )
+                    Box(
+                        modifier = Modifier
+                            .width(
+                                dimensionResource(R.dimen.color_picker_divider_width)
+                            )
+                            .fillMaxHeight()
+                            .background(
+                                contentColor.copy(alpha = 0.18f)
+                            )
+                    )
+                    Text(
+                        text = stringResource(R.string.color_picker_new),
+                        modifier = Modifier
+                            .padding(
+                                start = dimensionResource(
+                                    R.dimen.color_picker_current_new_padding
+                                )
+                            )
+                            .weight(1f),
+                        color = contentColor,
+                        textAlign = TextAlign.Start
                     )
                 }
-
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(modifier = Modifier.fillMaxSize()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .background(initialColor)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .background(selectedColor)
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        stringResource(R.string.color_picker_new),
-                        modifier = Modifier.padding(start = 12.dp),
-                        color = contentColor
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .height(
+                                dimensionResource(R.dimen.color_picker_preview_height)
+                            )
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart =
+                                        dimensionResource(R.dimen.color_picker_preview_corner)
+                                )
+                            )
+                            .background(initialColor)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .height(dimensionResource(R.dimen.color_picker_preview_height))
+                            .clip(
+                                RoundedCornerShape(
+                                    topEnd =
+                                        dimensionResource(R.dimen.color_picker_preview_corner)
+                                )
+                            )
+                            .background(selectedColor)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(
+                modifier = Modifier.height(
+                    dimensionResource(R.dimen.color_picker_preview_spacer)
+                )
+            )
 
             SaturationValuePanel(
                 hue = hue,
@@ -264,68 +319,78 @@ fun ColorPickerScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .height(dimensionResource(R.dimen.color_picker_saturation_panel_height))
+                    .clip(
+                        RoundedCornerShape(
+                            bottomStart = dimensionResource(
+                                R.dimen.color_picker_saturation_panel_corner
+                            ), bottomEnd = dimensionResource(
+                                R.dimen.color_picker_saturation_panel_corner
+                            )
+                        )
+                    )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(
+                modifier = Modifier.height(
+                    dimensionResource(R.dimen.color_picker_hue_bar_spacer)
+                )
+            )
 
             HueBar(
-                hue = hue,
-                onHueChanged = { h ->
+                hue = hue, onHueChanged = { h ->
                     hue = h
                     hexInput = colorToHex(
-                        Color(android.graphics.Color.HSVToColor(floatArrayOf(h, saturation, value)))
+                        Color(
+                            android.graphics.Color.HSVToColor(floatArrayOf(h, saturation, value))
+                        )
                     )
                     hexError = false
-                }
+                })
+
+            Spacer(
+                modifier = Modifier.height(
+                    dimensionResource(R.dimen.color_picker_hex_spacer)
+                )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             OutlinedTextField(
-                value = hexInput,
-                onValueChange = { input: String ->
-                    hexInput = input
-                    hexError = false
+                value = hexInput, onValueChange = { input: String ->
+                hexInput = input
+                hexError = false
 
-                    val parsed = parseHexColor(input)
-                    if (parsed != null) {
-                        val hsv = FloatArray(3)
-                        android.graphics.Color.colorToHSV(parsed.toArgbInt(), hsv)
-                        hue = hsv[0]
-                        saturation = hsv[1]
-                        value = hsv[2]
-                    }
-                },
-                label = {
-                    Text(
-                        stringResource(R.string.color_picker_hex_label),
-                        color = contentColor.copy(alpha = 0.7f)
-                    )
-                },
-                placeholder = { Text("#FF5722", color = contentColor.copy(alpha = 0.5f)) },
-                isError = hexError,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Characters,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        // Shift focus to an invisible element
-                        dummyFocusRequester.requestFocus()
+                val parsed = parseHexColor(input)
+                if (parsed != null) {
+                    val hsv = FloatArray(3)
+                    android.graphics.Color.colorToHSV(parsed.toArgbInt(), hsv)
+                    hue = hsv[0]
+                    saturation = hsv[1]
+                    value = hsv[2]
+                }
+            }, label = {
+                Text(
+                    stringResource(R.string.color_picker_hex_label),
+                    color = contentColor.copy(alpha = 0.7f)
+                )
+            }, placeholder = {
+                Text(
+                    stringResource(R.string.color_picker_hex_placeholder),
+                    color = contentColor.copy(alpha = 0.5f)
+                )
+            }, isError = hexError, singleLine = true, keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Characters, imeAction = ImeAction.Done
+            ), keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                    // Shift focus to an invisible element
+                    dummyFocusRequester.requestFocus()
 
-                        val parsed = parseHexColor(hexInput)
-                        if (parsed == null) {
-                            hexError = true
-                        }
+                    val parsed = parseHexColor(hexInput)
+                    if (parsed == null) {
+                        hexError = true
                     }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
+                }), modifier = Modifier.fillMaxWidth(), colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = contentColor,
                     unfocusedTextColor = contentColor,
                     focusedBorderColor = contentColor,
@@ -340,12 +405,24 @@ fun ColorPickerScreen(
                 Text(
                     stringResource(R.string.color_picker_hex_error),
                     color = MaterialTheme.colorScheme.error,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(top = 4.dp)
+                    fontSize = with(LocalDensity.current) {
+                        dimensionResource(
+                            R.dimen.color_picker_error_text_size
+                        ).toSp()
+                    },
+                    modifier = Modifier.padding(
+                        top = dimensionResource(
+                            R.dimen.color_picker_error_top_padding
+                        )
+                    )
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(
+                modifier = Modifier.height(
+                    dimensionResource(R.dimen.color_picker_bottom_spacer)
+                )
+            )
         }
     }
 
@@ -362,7 +439,7 @@ fun ColorPickerScreenPreview() {
             initialColor = Color.Blue,
             onColorConfirmed = {},
             onDismiss = {},
-            contrastWarning = "This color might be hard to read on a white background."
+            contrastWarning = stringResource(R.string.color_picker_preview_warning)
         )
     }
 }

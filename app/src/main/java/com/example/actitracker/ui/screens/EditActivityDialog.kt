@@ -304,7 +304,10 @@ fun EditActivityDialog(
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Icon(
                                                 imageVector = Icons.Default.Close,
-                                                contentDescription = stringResource(R.string.remove_tag_desc),
+                                                contentDescription =
+                                                    stringResource(
+                                                        R.string.remove_tag_desc
+                                                    ),
                                                 tint = dialogContentColor,
                                                 modifier = Modifier
                                                     .size(12.dp)

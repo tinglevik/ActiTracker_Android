@@ -57,6 +57,7 @@ fun AdaptiveDialogButtons(
 
                 TextButton(
                     onClick = onDismiss,
+                    shape = RectangleShape,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.textButtonColors(contentColor = dismissContentColor)
                 ) {
@@ -99,6 +100,7 @@ fun AdaptiveDialogButtons(
 
                 TextButton(
                     onClick = onDismiss,
+                    shape = RectangleShape,
                     colors = ButtonDefaults.textButtonColors(contentColor = dismissContentColor)
                 ) {
                     Text(dismissText)

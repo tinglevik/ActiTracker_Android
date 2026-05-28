@@ -163,10 +163,11 @@
     <!-- Color Picker Screen -->
     <string name="color_picker_title">Виберіть колір</string>
     <string name="color_picker_confirm">Підтвердити</string>
-    <string name="color_picker_current">Поточний:</string>
-    <string name="color_picker_new">Новий:</string>
+    <string name="color_picker_current">Поточний</string>
+    <string name="color_picker_new">Новий</string>
     <string name="color_picker_hex_label">HEX Колір</string>
     <string name="color_picker_hex_error">Невірний HEX колір. Використовуйте формат: #RRGGBB</string>
+    <string name="color_picker_preview_warning">Цей колір може бути важко прочитати на білому фоні.</string>
     <string name="info_desc">Інфо</string>
 
     <!-- Long Press Activity Row -->

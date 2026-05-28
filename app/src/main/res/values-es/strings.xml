@@ -163,10 +163,11 @@
     <!-- Color Picker Screen -->
     <string name="color_picker_title">Elegir color</string>
     <string name="color_picker_confirm">Confirmar</string>
-    <string name="color_picker_current">Actual:</string>
-    <string name="color_picker_new">Nuevo:</string>
+    <string name="color_picker_current">Actual</string>
+    <string name="color_picker_new">Nuevo</string>
     <string name="color_picker_hex_label">Color HEX</string>
     <string name="color_picker_hex_error">Color HEX inválido. Use el formato: #RRGGBB</string>
+    <string name="color_picker_preview_warning">Este color puede ser difícil de leer sobre un fondo blanco.</string>
     <string name="info_desc">Info</string>
 
     <!-- Long Press Activity Row -->
