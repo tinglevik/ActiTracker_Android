@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -52,6 +54,7 @@ fun EditGoalDialog(
     var isError by remember { mutableStateOf(false) }
 
     val dummyFocusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -66,7 +69,7 @@ fun EditGoalDialog(
             )
         },
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Box(
                     modifier = Modifier
                         .size(0.dp)

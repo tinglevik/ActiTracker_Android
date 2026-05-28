@@ -1,5 +1,7 @@
 package com.example.actitracker.ui.screens
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -381,6 +383,7 @@ fun TodayScreen(
             val isAdding = !activity.showInQuickPanel
 
             if (isAdding && quickPanelCount >= 9) {
+                val scrollState = rememberScrollState()
                 AlertDialog(
                     onDismissRequest = { swipedActivity = null },
                     containerColor = contentColor,
@@ -393,7 +396,9 @@ fun TodayScreen(
                         )
                     },
                     text = {
-                        Text(text = stringResource(R.string.quick_panel_limit_message))
+                        Column(modifier = Modifier.verticalScroll(scrollState)) {
+                            Text(text = stringResource(R.string.quick_panel_limit_message))
+                        }
                     },
                     confirmButton = {
                         TextButton(

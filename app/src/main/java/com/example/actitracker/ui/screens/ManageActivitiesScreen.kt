@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Flag
@@ -449,6 +451,7 @@ fun ManageActivitiesScreen(
         }
 
         if (showRedirectDialog) {
+            val scrollState = rememberScrollState()
             AlertDialog(
                 onDismissRequest = { showRedirectDialog = false },
                 containerColor = dialogContentColor,
@@ -459,13 +462,15 @@ fun ManageActivitiesScreen(
                     )
                 },
                 text = {
-                    Text(
-                        text = stringResource(
-                            R.string.redirect_import_message,
-                            stringResource(R.string.settings_data_management)
-                        ),
-                        color = dialogBackgroundColor.copy(alpha = 0.8f)
-                    )
+                    Column(modifier = Modifier.verticalScroll(scrollState)) {
+                        Text(
+                            text = stringResource(
+                                R.string.redirect_import_message,
+                                stringResource(R.string.settings_data_management)
+                            ),
+                            color = dialogBackgroundColor.copy(alpha = 0.8f)
+                        )
+                    }
                 },
                 confirmButton = {
                     AdaptiveDialogButtons(
@@ -489,10 +494,15 @@ fun ManageActivitiesScreen(
         }
 
         if (showDeleteConfirm && itemToDeleteId != null) {
+            val scrollState = rememberScrollState()
             AlertDialog(
                 onDismissRequest = { showDeleteConfirm = false },
                 title = { Text(stringResource(R.string.delete_item_title)) },
-                text = { Text(stringResource(R.string.delete_item_confirm)) },
+                text = {
+                    Column(modifier = Modifier.verticalScroll(scrollState)) {
+                        Text(stringResource(R.string.delete_item_confirm))
+                    }
+                },
                 confirmButton = {
                     AdaptiveDialogButtons(
                         confirmText = stringResource(R.string.yes_confirm),

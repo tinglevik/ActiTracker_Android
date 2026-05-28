@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Close
@@ -96,6 +98,7 @@ fun EditActivityDialog(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val dummyFocusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -113,7 +116,7 @@ fun EditActivityDialog(
         },
 
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Box(
                     modifier = Modifier
                         .size(0.dp)
@@ -457,6 +460,7 @@ fun EditActivityDialog(
     }
 
     if (showLimitWarning.value) {
+        val warningScrollState = rememberScrollState()
         AlertDialog(
             onDismissRequest = { showLimitWarning.value = false },
             containerColor = dialogContentColor,
@@ -469,7 +473,9 @@ fun EditActivityDialog(
                 )
             },
             text = {
-                Text(text = stringResource(R.string.quick_panel_limit_message))
+                Column(modifier = Modifier.verticalScroll(warningScrollState)) {
+                    Text(text = stringResource(R.string.quick_panel_limit_message))
+                }
             },
             confirmButton = {
                 TextButton(

@@ -1,5 +1,7 @@
 package com.example.actitracker.ui.screens
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,6 +33,7 @@ fun ContrastSuggestionDialog(
     onDismiss: () -> Unit
 ) {
     var selectedColor by remember { mutableStateOf(suggestions.firstOrNull()?.second) }
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = { /* Cannot be dismissed without a choice */ },
@@ -41,7 +44,7 @@ fun ContrastSuggestionDialog(
             )
         },
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
                     if (isBackgroundChange)
                         stringResource(R.string.contrast_bg_change_desc)

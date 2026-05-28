@@ -1,5 +1,8 @@
 package com.example.actitracker.ui.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,6 +26,7 @@ fun QuickPanelToggleDialog(
     dialogContentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     val newState = !activity.showInQuickPanel
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -36,12 +40,14 @@ fun QuickPanelToggleDialog(
             )
         },
         text = {
-            Text(
-                text = if (newState)
-                    stringResource(R.string.quick_panel_add_desc)
-                else
-                    stringResource(R.string.quick_panel_remove_desc)
-            )
+            Column(modifier = androidx.compose.ui.Modifier.verticalScroll(scrollState)) {
+                Text(
+                    text = if (newState)
+                        stringResource(R.string.quick_panel_add_desc)
+                    else
+                        stringResource(R.string.quick_panel_remove_desc)
+                )
+            }
         },
         confirmButton = {
             Button(

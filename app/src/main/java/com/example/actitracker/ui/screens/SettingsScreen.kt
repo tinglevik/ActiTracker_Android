@@ -571,6 +571,7 @@ fun ImportFlowContainer(
 ) {
     val fixedCardBg = Color(0xFF1E1E1E)
     val fixedTitleColor = Color(0xFFF5F5F5)
+    val scrollState = rememberScrollState()
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -602,7 +603,11 @@ fun ImportFlowContainer(
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .verticalScroll(scrollState)
+                    ) {
                         Text(
                             stringResource(R.string.import_title),
                             color = fixedTitleColor,
@@ -661,6 +666,7 @@ fun ImportFlowContainer(
 
             // STEP 2: Confirmation (Instant appearance)
             if (isConfirmStep && pendingOptions != null) {
+                val confirmScrollState = rememberScrollState()
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
@@ -668,7 +674,11 @@ fun ImportFlowContainer(
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .verticalScroll(confirmScrollState)
+                    ) {
                         Text(
                             stringResource(R.string.import_confirm_title),
                             color = fixedTitleColor,
@@ -709,6 +719,7 @@ fun ClearDataFlowContainer(
 ) {
     val fixedCardBg = Color(0xFF1E1E1E)
     val fixedTitleColor = Color(0xFFF5F5F5)
+    val scrollState = rememberScrollState()
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -740,7 +751,11 @@ fun ClearDataFlowContainer(
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .verticalScroll(scrollState)
+                    ) {
                         Text(
                             stringResource(R.string.clear_data_title),
                             color = fixedTitleColor,
@@ -805,6 +820,7 @@ fun ClearDataFlowContainer(
                 if (pendingOptions.logs) deletedItems.add(stringResource(R.string.export_logs))
                 if (pendingOptions.settings) deletedItems.add(stringResource(R.string.export_settings))
 
+                val confirmScrollState = rememberScrollState()
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
@@ -812,7 +828,11 @@ fun ClearDataFlowContainer(
                     shape = RoundedCornerShape(28.dp),
                     color = fixedCardBg
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .verticalScroll(confirmScrollState)
+                    ) {
                         Text(
                             stringResource(R.string.clear_confirm_title),
                             color = fixedTitleColor,
@@ -863,13 +883,14 @@ fun ImportExportDialog(
 
     val fixedCardBg = Color(0xFF1E1E1E)
     val fixedTitleColor = Color(0xFFF5F5F5)
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = fixedCardBg,
         title = { Text(stringResource(R.string.settings_import_export), color = fixedTitleColor) },
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = activities, onCheckedChange = { activities = it })
                     Text(stringResource(R.string.export_activities), color = fixedTitleColor)
