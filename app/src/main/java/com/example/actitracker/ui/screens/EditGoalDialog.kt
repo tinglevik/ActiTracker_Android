@@ -31,14 +31,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.delay
 import com.example.actitracker.R
 import com.example.actitracker.data.model.GoalItem
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
@@ -59,7 +63,14 @@ fun EditGoalDialog(
     var period by rememberSaveable { mutableStateOf(goal.period) }
     var isError by rememberSaveable { mutableStateOf(false) }
 
+    var focusedField by rememberSaveable { mutableStateOf<String?>(null) }
+    var isInitialized by remember { mutableStateOf(false) }
+    val nameFocusRequester = remember { FocusRequester() }
+    val hoursFocusRequester = remember { FocusRequester() }
     val dummyFocusRequester = remember { FocusRequester() }
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
 
     val configuration = LocalConfiguration.current
@@ -83,7 +94,7 @@ fun EditGoalDialog(
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Box(
                     modifier = Modifier
-                        .size(0.dp)
+                        .size(1.dp)
                         .focusRequester(dummyFocusRequester)
                         .focusable()
                 )
@@ -104,7 +115,15 @@ fun EditGoalDialog(
                     singleLine = true,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(nameFocusRequester)
+                        .onFocusChanged {
+                            if (isInitialized) {
+                                if (it.isFocused) focusedField = "name"
+                                else if (focusedField == "name") focusedField = null
+                            }
+                        },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = dialogContentColor,
                         unfocusedTextColor = dialogContentColor,
@@ -126,7 +145,15 @@ fun EditGoalDialog(
                     singleLine = true,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(hoursFocusRequester)
+                        .onFocusChanged {
+                            if (isInitialized) {
+                                if (it.isFocused) focusedField = "hours"
+                                else if (focusedField == "hours") focusedField = null
+                            }
+                        },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = dialogContentColor,
                         unfocusedTextColor = dialogContentColor,
@@ -191,7 +218,17 @@ fun EditGoalDialog(
     val isInspect = LocalInspectionMode.current
     LaunchedEffect(Unit) {
         if (!isInspect) {
-            dummyFocusRequester.requestFocus()
+            delay(100)
+            when (focusedField) {
+                "name" -> nameFocusRequester.requestFocus()
+                "hours" -> hoursFocusRequester.requestFocus()
+                else -> {
+                    focusManager.clearFocus(force = true)
+                    dummyFocusRequester.requestFocus()
+                    keyboardController?.hide()
+                }
+            }
+            isInitialized = true
         }
     }
 }

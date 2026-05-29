@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -67,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.delay
 import com.example.actitracker.R
 import com.example.actitracker.data.model.ActivityItem
 import com.example.actitracker.data.model.TagItem
@@ -101,6 +103,9 @@ fun EditActivityDialog(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var focusedField by rememberSaveable { mutableStateOf<String?>(null) }
+    var isInitialized by remember { mutableStateOf(false) }
+    val nameFocusRequester = remember { FocusRequester() }
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
@@ -145,7 +150,15 @@ fun EditActivityDialog(
                     singleLine = true,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(nameFocusRequester)
+                        .onFocusChanged {
+                            if (isInitialized) {
+                                if (it.isFocused) focusedField = "name"
+                                else if (focusedField == "name") focusedField = null
+                            }
+                        },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = dialogContentColor,
                         unfocusedTextColor = dialogContentColor,
@@ -349,7 +362,9 @@ fun EditActivityDialog(
                             color = dialogContentColor
                         )
                         Text(
-                            text = stringResource(R.string.show_in_notification_desc),
+                            text = stringResource(
+                                R.string.show_in_notification_desc
+                            ),
                             fontSize = 11.sp,
                             color = dialogContentColor.copy(alpha = 0.6f),
                             lineHeight = 14.sp
@@ -484,7 +499,9 @@ fun EditActivityDialog(
             },
             text = {
                 Column(modifier = Modifier.verticalScroll(warningScrollState)) {
-                    Text(text = stringResource(R.string.quick_panel_limit_message))
+                    Text(text = stringResource(
+                        R.string.quick_panel_limit_message
+                    ))
                 }
             },
             confirmButton = {
@@ -503,7 +520,15 @@ fun EditActivityDialog(
     val isInspect = LocalInspectionMode.current
     LaunchedEffect(Unit) {
         if (!isInspect) {
-            dummyFocusRequester.requestFocus()
+            delay(100)
+            if (focusedField == "name") {
+                nameFocusRequester.requestFocus()
+            } else {
+                focusManager.clearFocus(force = true)
+                dummyFocusRequester.requestFocus()
+                keyboardController?.hide()
+            }
+            isInitialized = true
         }
     }
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.delay
 import com.example.actitracker.R
 import com.example.actitracker.data.model.TagItem
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
@@ -72,6 +74,9 @@ fun EditTagDialog(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var focusedField by rememberSaveable { mutableStateOf<String?>(null) }
+    var isInitialized by remember { mutableStateOf(false) }
+    val nameFocusRequester = remember { FocusRequester() }
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
@@ -96,7 +101,7 @@ fun EditTagDialog(
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Box(
                     modifier = Modifier
-                        .size(0.dp)
+                        .size(1.dp)
                         .focusRequester(dummyFocusRequester)
                         .focusable()
                 )
@@ -125,7 +130,14 @@ fun EditTagDialog(
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .focusRequester(nameFocusRequester)
+                        .onFocusChanged {
+                            if (isInitialized) {
+                                if (it.isFocused) focusedField = "name"
+                                else if (focusedField == "name") focusedField = null
+                            }
+                        },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = dialogContentColor,
                         unfocusedTextColor = dialogContentColor,
@@ -221,7 +233,15 @@ fun EditTagDialog(
     val isInspect = LocalInspectionMode.current
     LaunchedEffect(Unit) {
         if (!isInspect) {
-            dummyFocusRequester.requestFocus()
+            delay(100)
+            if (focusedField == "name") {
+                nameFocusRequester.requestFocus()
+            } else {
+                focusManager.clearFocus(force = true)
+                dummyFocusRequester.requestFocus()
+                keyboardController?.hide()
+            }
+            isInitialized = true
         }
     }
 }
