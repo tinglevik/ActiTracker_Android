@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -105,10 +107,17 @@ fun SettingsScreen(
     val dimScreen by settingsViewModel.dimScreen.collectAsState()
     val highlightDataManagement by settingsViewModel.highlightDataManagement.collectAsState()
     val context = LocalContext.current
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
     LaunchedEffect(shouldHighlight) {
         if (shouldHighlight) {
             settingsViewModel.triggerHighlight()
+        }
+    }
+
+    LaunchedEffect(highlightDataManagement) {
+        if (highlightDataManagement) {
+            bringIntoViewRequester.bringIntoView()
         }
     }
 
@@ -158,7 +167,8 @@ fun SettingsScreen(
             )
         },
         onShowSnackbar = { settingsViewModel.showSnackbar(it) },
-        contentColor = contentColor
+        contentColor = contentColor,
+        bringIntoViewRequester = bringIntoViewRequester
     )
 }
 
@@ -181,7 +191,8 @@ fun SettingsScreenContent(
     onRestoreBackup: (String, BackupOptions) -> Unit,
     onClearData: (BackupOptions) -> Unit,
     onShowSnackbar: (String) -> Unit,
-    contentColor: Color = Color.Black
+    contentColor: Color = Color.Black,
+    bringIntoViewRequester: BringIntoViewRequester = remember { BringIntoViewRequester() }
 ) {
     var colorPickerTarget by rememberSaveable { mutableStateOf<ColorPickerTarget?>(null) }
     var showContrastDialog by rememberSaveable { mutableStateOf(false) }
@@ -394,7 +405,8 @@ fun SettingsScreenContent(
                             subtitle = stringResource(R.string.settings_import_export_desc),
                             icon = Icons.Default.SaveAlt,
                             onClick = { showImportExportDialog = true },
-                            highlight = highlightDataManagement
+                            highlight = highlightDataManagement,
+                            modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester)
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -1011,6 +1023,7 @@ private fun SettingsActionCard(
     subtitle: String,
     icon: ImageVector,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     highlight: Boolean = false
 ) {
     val fixedCardBg = Color(0xFF1E1E1E)
@@ -1024,7 +1037,7 @@ private fun SettingsActionCard(
     )
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
