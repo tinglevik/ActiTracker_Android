@@ -5,14 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -33,10 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.actitracker.R
 import com.example.actitracker.data.model.GoalItem
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
+import com.example.actitracker.ui.theme.ActitrackerTheme
 
 @Composable
 fun EditGoalDialog(
@@ -126,20 +128,25 @@ fun EditGoalDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(stringResource(R.string.goal_period_label), color = dialogContentColor)
-                Row {
-                    RadioButton(selected = period == "DAILY", onClick = { period = "DAILY" })
-                    Text(
-                        stringResource(R.string.period_daily),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = dialogContentColor
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    RadioButton(selected = period == "WEEKLY", onClick = { period = "WEEKLY" })
-                    Text(
-                        stringResource(R.string.period_weekly),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = dialogContentColor
-                    )
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = period == "DAILY", onClick = { period = "DAILY" })
+                        Text(
+                            stringResource(R.string.period_daily),
+                            color = dialogContentColor
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = period == "WEEKLY", onClick = { period = "WEEKLY" })
+                        Text(
+                            stringResource(R.string.period_weekly),
+                            color = dialogContentColor
+                        )
+                    }
                 }
             }
         },
@@ -176,6 +183,29 @@ fun EditGoalDialog(
     LaunchedEffect(Unit) {
         if (!isInspect) {
             dummyFocusRequester.requestFocus()
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditGoalDialogPreview() {
+    val sampleGoal = GoalItem(
+        id = 1L,
+        name = "Study Android",
+        targetSeconds = 10800L,
+        period = "DAILY"
+    )
+
+    ActitrackerTheme {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            EditGoalDialog(
+                goal = sampleGoal,
+                onDismiss = {},
+                onSave = {},
+                onDelete = {},
+                isCreating = false
+            )
         }
     }
 }
