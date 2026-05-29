@@ -1,5 +1,6 @@
 package com.example.actitracker.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.example.actitracker.R
 import com.example.actitracker.data.model.GoalItem
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
@@ -59,8 +62,13 @@ fun EditGoalDialog(
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     AlertDialog(
         onDismissRequest = onDismiss,
+        modifier = Modifier.fillMaxWidth(if (isLandscape) 0.95f else 0.9f),
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         containerColor = dialogBackgroundColor,
         titleContentColor = dialogContentColor,
         textContentColor = dialogContentColor,

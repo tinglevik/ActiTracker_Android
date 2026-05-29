@@ -1,5 +1,6 @@
 package com.example.actitracker.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -73,8 +75,13 @@ fun EditTagDialog(
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     AlertDialog(
         onDismissRequest = onDismiss,
+        modifier = Modifier.fillMaxWidth(if (isLandscape) 0.95f else 0.9f),
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         containerColor = dialogBackgroundColor,
         titleContentColor = dialogContentColor,
         textContentColor = dialogContentColor,
