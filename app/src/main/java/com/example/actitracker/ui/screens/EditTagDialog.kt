@@ -31,7 +31,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.example.actitracker.util.ColorSaver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,11 +62,11 @@ fun EditTagDialog(
     dialogBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     dialogContentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    var name by remember { mutableStateOf(tag.name) }
-    var selectedColor by remember { mutableStateOf(tag.color) }
-    var isError by remember { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf(tag.name) }
+    var selectedColor by rememberSaveable(stateSaver = ColorSaver) { mutableStateOf(tag.color) }
+    var isError by rememberSaveable { mutableStateOf(false) }
 
-    var showColorPicker by remember { mutableStateOf(false) }
+    var showColorPicker by rememberSaveable { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -149,7 +151,7 @@ fun EditTagDialog(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape)
-                            .background(selectedColor)
+                            .background(selectedColor!!)
                             .border(1.dp, dialogContentColor.copy(alpha = 0.3f), CircleShape)
                     )
                 }
@@ -161,7 +163,7 @@ fun EditTagDialog(
                 onConfirm = {
                     val trimmedName = name.trim()
                     if (trimmedName.isNotEmpty()) {
-                        onSave(tag.copy(name = trimmedName, color = selectedColor))
+                        onSave(tag.copy(name = trimmedName, color = selectedColor!!))
                     }
                 },
                 onDismiss = onDismiss,
@@ -191,7 +193,7 @@ fun EditTagDialog(
                 contentAlignment = Alignment.Center
             ) {
                 ColorPickerScreen(
-                    initialColor = selectedColor,
+                    initialColor = selectedColor!!,
                     onColorConfirmed = {
                         selectedColor = it
                         showColorPicker = false

@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,10 +51,10 @@ fun EditGoalDialog(
     dialogBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     dialogContentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    var name by remember { mutableStateOf(goal.name) }
-    var targetHours by remember { mutableStateOf((goal.targetSeconds / 3600).toString()) }
-    var period by remember { mutableStateOf(goal.period) }
-    var isError by remember { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf(goal.name) }
+    var targetHours by rememberSaveable { mutableStateOf((goal.targetSeconds / 3600).toString()) }
+    var period by rememberSaveable { mutableStateOf(goal.period) }
+    var isError by rememberSaveable { mutableStateOf(false) }
 
     val dummyFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()

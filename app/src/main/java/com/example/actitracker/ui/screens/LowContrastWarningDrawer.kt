@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +35,8 @@ fun LowContrastWarningDrawer(
     onKeep: () -> Unit,
     onTimeout: () -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var secondsLeft by remember { mutableIntStateOf(30) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var secondsLeft by rememberSaveable { mutableIntStateOf(30) }
 
     LaunchedEffect(Unit) {
         while (secondsLeft > 0) {

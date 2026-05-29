@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -95,9 +96,9 @@ fun ColorPickerScreen(
         hsv
     }
 
-    var hue by remember { mutableFloatStateOf(initialHsv[0]) }
-    var saturation by remember { mutableFloatStateOf(initialHsv[1]) }
-    var value by remember { mutableFloatStateOf(initialHsv[2]) }
+    var hue by rememberSaveable { mutableFloatStateOf(initialHsv[0]) }
+    var saturation by rememberSaveable { mutableFloatStateOf(initialHsv[1]) }
+    var value by rememberSaveable { mutableFloatStateOf(initialHsv[2]) }
 
     val selectedColor by remember(hue, saturation, value) {
         mutableStateOf(
@@ -111,10 +112,10 @@ fun ColorPickerScreen(
         )
     }
 
-    var hexInput by remember(selectedColor) {
+    var hexInput by rememberSaveable(selectedColor) {
         mutableStateOf(colorToHex(selectedColor))
     }
-    var hexError by remember { mutableStateOf(false) }
+    var hexError by rememberSaveable { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current

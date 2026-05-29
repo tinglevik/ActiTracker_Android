@@ -45,7 +45,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.example.actitracker.util.ColorSaver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,17 +85,17 @@ fun EditActivityDialog(
     dialogContentColor: Color = MaterialTheme.colorScheme.onSurface,
     quickPanelCount: Int = 0
 ) {
-    var name by remember { mutableStateOf(activity.name) }
-    var selectedColor by remember { mutableStateOf(activity.color) }
-    var selectedIconName by remember { mutableStateOf(activity.icon) }
-    var showInQuickPanel by remember { mutableStateOf(activity.showInQuickPanel) }
-    var selectedTagIds by remember { mutableStateOf(activity.tagIds) }
-    var showTagMenu by remember { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf(activity.name) }
+    var selectedColor by rememberSaveable(stateSaver = ColorSaver) { mutableStateOf(activity.color) }
+    var selectedIconName by rememberSaveable { mutableStateOf(activity.icon) }
+    var showInQuickPanel by rememberSaveable { mutableStateOf(activity.showInQuickPanel) }
+    var selectedTagIds by rememberSaveable { mutableStateOf(activity.tagIds) }
+    var showTagMenu by rememberSaveable { mutableStateOf(false) }
 
     // State for showing selection dialogs
-    val showColorPicker = remember { mutableStateOf(false) }
-    val showIconPicker = remember { mutableStateOf(false) }
-    val showLimitWarning = remember { mutableStateOf(false) }
+    val showColorPicker = rememberSaveable { mutableStateOf(false) }
+    val showIconPicker = rememberSaveable { mutableStateOf(false) }
+    val showLimitWarning = rememberSaveable { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -168,7 +170,7 @@ fun EditActivityDialog(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape)
-                            .background(selectedColor)
+                            .background(selectedColor!!)
                             .border(
                                 1.dp,
                                 dialogContentColor.copy(alpha = 0.3f),
@@ -374,7 +376,7 @@ fun EditActivityDialog(
                         onSave(
                             activity.copy(
                                 name = name.trim(),
-                                color = selectedColor,
+                                color = selectedColor!!,
                                 icon = selectedIconName,
                                 showInQuickPanel = showInQuickPanel,
                                 tagIds = selectedTagIds
@@ -410,7 +412,7 @@ fun EditActivityDialog(
                 contentAlignment = Alignment.Center
             ) {
                 ColorPickerScreen(
-                    initialColor = selectedColor,
+                    initialColor = selectedColor!!,
                     onColorConfirmed = {
                         selectedColor = it
                         showColorPicker.value = false

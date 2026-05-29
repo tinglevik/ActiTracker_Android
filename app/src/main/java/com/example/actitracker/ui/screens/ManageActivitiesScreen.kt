@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -105,17 +106,17 @@ fun ManageActivitiesScreen(
     dialogBackgroundColor: Color = MaterialTheme.colorScheme.background,
     dialogContentColor: Color = MaterialTheme.colorScheme.onBackground,
 ) {
-    var selectedTab by remember { mutableStateOf(ManageTab.ACTIVITIES) }
+    var selectedTab by rememberSaveable { mutableStateOf(ManageTab.ACTIVITIES) }
 
-    var showCreateDialog by remember { mutableStateOf(false) }
-    var editingActivity by remember { mutableStateOf<ActivityItem?>(null) }
-    var editingTag by remember { mutableStateOf<TagItem?>(null) }
-    var editingGoal by remember { mutableStateOf<GoalItem?>(null) }
+    var showCreateDialog by rememberSaveable { mutableStateOf(false) }
+    var editingActivity by rememberSaveable { mutableStateOf<ActivityItem?>(null) }
+    var editingTag by rememberSaveable { mutableStateOf<TagItem?>(null) }
+    var editingGoal by rememberSaveable { mutableStateOf<GoalItem?>(null) }
 
-    var showRedirectDialog by remember { mutableStateOf(false) }
+    var showRedirectDialog by rememberSaveable { mutableStateOf(false) }
 
-    var itemToDeleteId by remember { mutableStateOf<Long?>(null) }
-    var showDeleteConfirm by remember { mutableStateOf(false) }
+    var itemToDeleteId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()

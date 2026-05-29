@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,7 +78,7 @@ fun ReportScreen(
     val dateOffset by viewModel.dateOffset.collectAsState()
     val customRange by viewModel.customDateRange.collectAsState()
 
-    var showRangePicker by remember { mutableStateOf(false) }
+    var showRangePicker by rememberSaveable { mutableStateOf(false) }
 
     if (showRangePicker) {
         CustomDateRangePicker(
@@ -182,7 +183,7 @@ fun ReportScreenContent(
     }
 
     val scrollState = rememberLazyListState()
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize()

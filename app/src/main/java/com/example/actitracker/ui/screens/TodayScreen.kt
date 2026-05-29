@@ -51,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,13 +108,13 @@ fun TodayScreen(
     val listState = rememberLazyListState()
 
     // Search and Filter State
-    var searchQuery by remember { mutableStateOf("") }
-    var isSearchActive by remember { mutableStateOf(false) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSearchActive by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     // Tag Filter State: null = All, -1L = No Tag, else = Tag ID
-    var selectedTagFilterId by remember { mutableStateOf<Long?>(null) }
-    var showFilterMenu by remember { mutableStateOf(false) }
+    var selectedTagFilterId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var showFilterMenu by rememberSaveable { mutableStateOf(false) }
 
     val isFilterActive = searchQuery.isNotBlank() || selectedTagFilterId != null
 
@@ -142,7 +143,7 @@ fun TodayScreen(
         activities.filter { it.id == activeActivityId }
     }
 
-    var swipedActivity by remember { mutableStateOf<ActivityItem?>(null) }
+    var swipedActivity by rememberSaveable { mutableStateOf<ActivityItem?>(null) }
 
     Scaffold(
         containerColor = backgroundColor,

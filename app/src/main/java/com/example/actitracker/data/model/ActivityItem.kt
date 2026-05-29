@@ -1,7 +1,13 @@
 package com.example.actitracker.data.model
 
+import android.os.Parcelable
 import androidx.compose.ui.graphics.Color
+import com.example.actitracker.util.ColorParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 
+@Parcelize
+@TypeParceler<Color, ColorParceler>
 data class ActivityItem(
     val id: Long,
     val name: String,
@@ -13,4 +19,4 @@ data class ActivityItem(
     val showInQuickPanel: Boolean = false,
     val tagIds: List<Long> = emptyList(),
     val sortOrder: Int = 0
-)
+) : Parcelable

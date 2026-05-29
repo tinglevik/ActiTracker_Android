@@ -1,5 +1,6 @@
 package com.example.actitracker.ui.screens
 
+import android.os.Parcelable
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -50,6 +51,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,19 +72,22 @@ import com.example.actitracker.R
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
 import com.example.actitracker.ui.components.ContrastUtils
 import com.example.actitracker.ui.theme.ActitrackerTheme
+import com.example.actitracker.util.ColorSaver
 import com.example.actitracker.viewmodel.SettingsViewModel
+import kotlinx.parcelize.Parcelize
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
 private enum class ColorPickerTarget { BACKGROUND, TEXT }
 
+@Parcelize
 data class BackupOptions(
     val activities: Boolean = true,
     val tags: Boolean = true,
     val goals: Boolean = true,
     val logs: Boolean = true,
     val settings: Boolean = true
-)
+) : Parcelable
 
 @Composable
 fun SettingsScreen(
@@ -178,24 +183,24 @@ fun SettingsScreenContent(
     onShowSnackbar: (String) -> Unit,
     contentColor: Color = Color.Black
 ) {
-    var colorPickerTarget by remember { mutableStateOf<ColorPickerTarget?>(null) }
-    var showContrastDialog by remember { mutableStateOf(false) }
-    var pendingColor by remember { mutableStateOf<Color?>(null) }
-    var contrastDialogSource by remember { mutableStateOf<ColorPickerTarget?>(null) }
-    var openedFromContrastDialog by remember { mutableStateOf(false) }
-    var colorBeforeContrastFlow by remember { mutableStateOf<Color?>(null) }
+    var colorPickerTarget by rememberSaveable { mutableStateOf<ColorPickerTarget?>(null) }
+    var showContrastDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingColor by rememberSaveable(stateSaver = ColorSaver) { mutableStateOf<Color?>(null) }
+    var contrastDialogSource by rememberSaveable { mutableStateOf<ColorPickerTarget?>(null) }
+    var openedFromContrastDialog by rememberSaveable { mutableStateOf(false) }
+    var colorBeforeContrastFlow by rememberSaveable(stateSaver = ColorSaver) { mutableStateOf<Color?>(null) }
 
-    var showImportExportDialog by remember { mutableStateOf(false) }
-    var showImportFlow by remember { mutableStateOf(false) }
-    var importIsConfirmStep by remember { mutableStateOf(false) }
+    var showImportExportDialog by rememberSaveable { mutableStateOf(false) }
+    var showImportFlow by rememberSaveable { mutableStateOf(false) }
+    var importIsConfirmStep by rememberSaveable { mutableStateOf(false) }
 
-    var showClearDataFlow by remember { mutableStateOf(false) }
-    var clearDataIsConfirmStep by remember { mutableStateOf(false) }
+    var showClearDataFlow by rememberSaveable { mutableStateOf(false) }
+    var clearDataIsConfirmStep by rememberSaveable { mutableStateOf(false) }
 
-    var importJsonContent by remember { mutableStateOf<String?>(null) }
-    var pendingImportOptions by remember { mutableStateOf<BackupOptions?>(null) }
-    var pendingClearOptions by remember { mutableStateOf<BackupOptions?>(null) }
-    var exportOptions by remember { mutableStateOf<BackupOptions?>(null) }
+    var importJsonContent by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingImportOptions by rememberSaveable { mutableStateOf<BackupOptions?>(null) }
+    var pendingClearOptions by rememberSaveable { mutableStateOf<BackupOptions?>(null) }
+    var exportOptions by rememberSaveable { mutableStateOf<BackupOptions?>(null) }
     val context = LocalContext.current
     val exportSuccessMessage = stringResource(R.string.export_success)
 
@@ -596,11 +601,11 @@ fun ImportFlowContainer(
             modifier = Modifier.fillMaxSize()
         ) {
             // STEP 1: Selection (Fade exit only)
-            var activities by remember { mutableStateOf(true) }
-            var tags by remember { mutableStateOf(true) }
-            var goals by remember { mutableStateOf(true) }
-            var logs by remember { mutableStateOf(true) }
-            var settings by remember { mutableStateOf(true) }
+            var activities by rememberSaveable { mutableStateOf(true) }
+            var tags by rememberSaveable { mutableStateOf(true) }
+            var goals by rememberSaveable { mutableStateOf(true) }
+            var logs by rememberSaveable { mutableStateOf(true) }
+            var settings by rememberSaveable { mutableStateOf(true) }
 
             AnimatedVisibility(
                 visible = !isConfirmStep,
@@ -744,11 +749,11 @@ fun ClearDataFlowContainer(
             modifier = Modifier.fillMaxSize()
         ) {
             // STEP 1: Selection
-            var activities by remember { mutableStateOf(false) }
-            var tags by remember { mutableStateOf(false) }
-            var goals by remember { mutableStateOf(false) }
-            var logs by remember { mutableStateOf(false) }
-            var settings by remember { mutableStateOf(false) }
+            var activities by rememberSaveable { mutableStateOf(false) }
+            var tags by rememberSaveable { mutableStateOf(false) }
+            var goals by rememberSaveable { mutableStateOf(false) }
+            var logs by rememberSaveable { mutableStateOf(false) }
+            var settings by rememberSaveable { mutableStateOf(false) }
 
             AnimatedVisibility(
                 visible = !isConfirmStep,
@@ -886,11 +891,11 @@ fun ImportExportDialog(
     ) -> Unit,
     onImport: () -> Unit,
 ) {
-    var activities by remember { mutableStateOf(true) }
-    var tags by remember { mutableStateOf(true) }
-    var goals by remember { mutableStateOf(true) }
-    var logs by remember { mutableStateOf(true) }
-    var settings by remember { mutableStateOf(true) }
+    var activities by rememberSaveable { mutableStateOf(true) }
+    var tags by rememberSaveable { mutableStateOf(true) }
+    var goals by rememberSaveable { mutableStateOf(true) }
+    var logs by rememberSaveable { mutableStateOf(true) }
+    var settings by rememberSaveable { mutableStateOf(true) }
 
     val fixedCardBg = Color(0xFF1E1E1E)
     val fixedTitleColor = Color(0xFFF5F5F5)
