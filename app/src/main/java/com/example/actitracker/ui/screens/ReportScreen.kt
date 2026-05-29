@@ -595,9 +595,9 @@ fun ReportActivityItem(
 fun ReportPieChart(
     reportStats: ReportStats,
     mode: ReportMode,
+    modifier: Modifier = Modifier,
     contentColor: Color = Color.Black,
-    backgroundColor: Color = Color.White,
-    modifier: Modifier = Modifier
+    backgroundColor: Color = Color.White
 ) {
     val contentColorArgb = remember(contentColor) { contentColor.toArgb() }
     val contentColorArgbLighted = remember(contentColor) {
