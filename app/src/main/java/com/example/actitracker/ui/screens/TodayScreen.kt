@@ -1,7 +1,5 @@
 package com.example.actitracker.ui.screens
 
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -26,10 +24,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
@@ -392,13 +392,17 @@ fun TodayScreen(
                     textContentColor = backgroundColor,
                     title = {
                         Text(
-                            text = stringResource(R.string.quick_panel_limit_title),
+                            text =
+                                stringResource(R.string.quick_panel_limit_title),
                             fontWeight = FontWeight.Bold
                         )
                     },
                     text = {
                         Column(modifier = Modifier.verticalScroll(scrollState)) {
-                            Text(text = stringResource(R.string.quick_panel_limit_message))
+                            Text(
+                                text =
+                                    stringResource(R.string.quick_panel_limit_message)
+                            )
                         }
                     },
                     confirmButton = {
@@ -603,15 +607,14 @@ private fun CurrentTaskBlock(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(
-                        ActivityRowDimens.currentTaskPadding * 2 +
-                                ActivityRowDimens.touchTargetSize +
-                                ActivityRowDimens.currentTaskBorder
+                        ActivityRowDimens.stopButtonSize +
+                                ActivityRowDimens.currentTaskBorderSize
                     )
                     .then(
                         if (currentActiveList.isNotEmpty()) {
                             Modifier.border(
                                 BorderStroke(
-                                    ActivityRowDimens.currentTaskBorder,
+                                    ActivityRowDimens.currentTaskBorderSize,
                                     contentColor
                                 ),
                                 RoundedCornerShape(8.dp)
@@ -632,21 +635,30 @@ private fun CurrentTaskBlock(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(ActivityRowDimens.currentTaskPadding)
                     ) {
                         currentActiveList.forEach { activity ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                AppIcon(
-                                    iconName = activity.icon,
-                                    tint = activity.color,
-                                    modifier = Modifier.size(ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp)
-                                )
+                                Box(
+                                    modifier = Modifier.size(ActivityRowDimens.stopButtonSize),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    AppIcon(
+                                        iconName = activity.icon,
+                                        tint = activity.color,
+                                        modifier = Modifier.size(
+                                            ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp
+                                        )
+                                    )
+                                }
 
                                 Spacer(
                                     modifier = Modifier.width(
-                                        (ActivityRowDimens.activityRowHorizontalSpacerSize.value * 0.5)
+                                        (ActivityRowDimens
+                                            .activityRowHorizontalSpacerSize
+                                            .value
+                                                * 0.5)
                                             .dp
                                     )
                                 )
@@ -663,7 +675,10 @@ private fun CurrentTaskBlock(
 
                                 Spacer(
                                     modifier = Modifier.width(
-                                        (ActivityRowDimens.activityRowHorizontalSpacerSize.value * 0.5)
+                                        (ActivityRowDimens
+                                            .activityRowHorizontalSpacerSize
+                                            .value
+                                                * 0.5)
                                             .dp
                                     )
                                 )
@@ -676,7 +691,7 @@ private fun CurrentTaskBlock(
 
                                 Box(
                                     modifier = Modifier
-                                        .size(ActivityRowDimens.touchTargetSize)
+                                        .size(ActivityRowDimens.stopButtonSize)
                                         .clickable { onStopActivity(activity.id) },
                                     contentAlignment = Alignment.Center
                                 ) {

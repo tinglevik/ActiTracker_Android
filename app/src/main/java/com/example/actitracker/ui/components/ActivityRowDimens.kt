@@ -15,7 +15,6 @@ internal object ActivityRowDimens {
     val firstStartDayTimeFontSize = headerFontSize * 0.8f
     const val ACTIVITY_ROW_ICON_SIZE = 24
     val activityRowHorizontalSpacerSize = 12.dp
-    val currentTaskPadding = 8.dp
-    val currentTaskBorder = 1.dp
-    val touchTargetSize = 48.dp
+    val currentTaskBorderSize = 1.dp
+    val stopButtonSize = 48.dp
 }
