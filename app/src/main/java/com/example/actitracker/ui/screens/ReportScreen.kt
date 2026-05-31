@@ -26,6 +26,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DropdownMenu
@@ -47,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -89,7 +93,9 @@ fun ReportScreen(
             onRangeSelected = { from, to ->
                 viewModel.setCustomRange(from, to)
                 showRangePicker = false
-            }
+            },
+            dialogBackgroundColor = backgroundColor,
+            dialogContentColor = contentColor
         )
     }
 
@@ -118,52 +124,98 @@ fun ReportScreen(
 @Composable
 fun CustomDateRangePicker(
     onDismiss: () -> Unit,
-    onRangeSelected: (Long, Long) -> Unit
+    onRangeSelected: (Long, Long) -> Unit,
+    dialogBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    dialogContentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     val state = rememberDateRangePickerState()
+    val datePickerColors = DatePickerDefaults.colors(
+        containerColor = dialogBackgroundColor,
+        titleContentColor = dialogContentColor,
+        headlineContentColor = dialogContentColor,
+        weekdayContentColor = dialogContentColor,
+        subheadContentColor = dialogContentColor,
+        navigationContentColor = dialogContentColor,
+        yearContentColor = dialogContentColor,
+        disabledYearContentColor = dialogContentColor.copy(alpha = 0.38f),
+        currentYearContentColor = dialogContentColor,
+        selectedYearContentColor = dialogBackgroundColor,
+        selectedYearContainerColor = dialogContentColor,
+        dayContentColor = dialogContentColor,
+        disabledDayContentColor = dialogContentColor.copy(alpha = 0.38f),
+        selectedDayContentColor = dialogBackgroundColor,
+        selectedDayContainerColor = dialogContentColor,
+        todayContentColor = dialogContentColor,
+        todayDateBorderColor = dialogContentColor,
+        dayInSelectionRangeContentColor = dialogContentColor,
+        dayInSelectionRangeContainerColor = dialogContentColor.copy(alpha = 0.15f),
+        dividerColor = dialogContentColor.copy(alpha = 0.12f)
+    )
+
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(
-                onClick = {
-                    val start = state.selectedStartDateMillis
-                    val end = state.selectedEndDateMillis
-                    if (start != null && end != null) {
-                        // Set end to end of day
-                        val cal = Calendar.getInstance()
-                        cal.timeInMillis = end
-                        cal.set(Calendar.HOUR_OF_DAY, 23)
-                        cal.set(Calendar.MINUTE, 59)
-                        cal.set(Calendar.SECOND, 59)
-                        cal.set(Calendar.MILLISECOND, 999)
-                        onRangeSelected(start, cal.timeInMillis)
-                    }
-                },
-                enabled =
-                    state.selectedStartDateMillis != null && state.selectedEndDateMillis != null
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.ok_button))
+                TextButton(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = dialogContentColor
+                    )
+                ) {
+                    Text(stringResource(R.string.cancel_button))
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Button(
+                    onClick = {
+                        val start = state.selectedStartDateMillis
+                        val end = state.selectedEndDateMillis
+                        if (start != null && end != null) {
+                            // Set end to end of day
+                            val cal = Calendar.getInstance()
+                            cal.timeInMillis = end
+                            cal.set(Calendar.HOUR_OF_DAY, 23)
+                            cal.set(Calendar.MINUTE, 59)
+                            cal.set(Calendar.SECOND, 59)
+                            cal.set(Calendar.MILLISECOND, 999)
+                            onRangeSelected(start, cal.timeInMillis)
+                        }
+                    },
+                    enabled =
+                        state.selectedStartDateMillis != null && state.selectedEndDateMillis != null,
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = dialogContentColor,
+                        contentColor = dialogBackgroundColor
+                    )
+                ) {
+                    Text(stringResource(R.string.ok_button))
+                }
             }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel_button))
-            }
-        }
+        dismissButton = null,
+        colors = datePickerColors
     ) {
         DateRangePicker(
             state = state,
             title = {
                 Text(
                     text = stringResource(R.string.select_date_range),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    color = dialogContentColor
                 )
             },
             headline = {
                 // Default headline is fine or we can customize
             },
             showModeToggle = false,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            colors = datePickerColors
         )
     }
 }
@@ -194,20 +246,24 @@ fun ReportScreenContent(
 
     val locale = configuration.locales[0]
     val dateText = remember(dateOffset, period, customRange, locale) {
-        if (period == ReportPeriod.TODAY) {
-            val cal = Calendar.getInstance()
-            cal.add(Calendar.DAY_OF_YEAR, dateOffset)
-            java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, locale)
-                .format(cal.time)
-        } else if (period == ReportPeriod.CUSTOM_RANGE) {
-            customRange?.let {
-                val df = java.text.DateFormat.getDateInstance(
-                    java.text.DateFormat.SHORT,
-                    locale
-                )
-                "${df.format(Date(it.first))} - ${df.format(Date(it.second))}"
-            } ?: ""
-        } else ""
+        when (period) {
+            ReportPeriod.TODAY -> {
+                val cal = Calendar.getInstance()
+                cal.add(Calendar.DAY_OF_YEAR, dateOffset)
+                java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, locale)
+                    .format(cal.time)
+            }
+            ReportPeriod.CUSTOM_RANGE -> {
+                customRange?.let {
+                    val df = java.text.DateFormat.getDateInstance(
+                        java.text.DateFormat.SHORT,
+                        locale
+                    )
+                    "${df.format(Date(it.first))} - ${df.format(Date(it.second))}"
+                } ?: ""
+            }
+            else -> ""
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
