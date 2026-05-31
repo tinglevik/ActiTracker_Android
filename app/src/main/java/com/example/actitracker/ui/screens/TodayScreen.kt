@@ -1,5 +1,6 @@
 package com.example.actitracker.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -107,6 +108,9 @@ fun TodayScreen(
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     // Search and Filter State
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
@@ -153,7 +157,10 @@ fun TodayScreen(
             TodayTopBar(
                 ticker = ticker,
                 contentColor = contentColor,
-                onManageClick = onManageClick
+                onManageClick = onManageClick,
+                activeActivities = if (isLandscape) activeActivities else emptyList(),
+                onStopActivity = onStopActivity,
+                isLandscape = isLandscape
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -181,17 +188,19 @@ fun TodayScreen(
                 .padding(paddingValues)
         ) {
             // 2) Block: Current task
-            CurrentTaskBlock(
-                activeActivities = activeActivities,
-                contentColor = contentColor,
-                onStopActivity = onStopActivity
-            )
+            if (!isLandscape) {
+                CurrentTaskBlock(
+                    activeActivities = activeActivities,
+                    contentColor = contentColor,
+                    onStopActivity = onStopActivity
+                )
+            }
 
             // 1) Block: Task + Search + Filter
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -436,7 +445,10 @@ fun TodayScreen(
 private fun TodayTopBar(
     ticker: Long,
     contentColor: Color,
-    onManageClick: () -> Unit
+    onManageClick: () -> Unit,
+    activeActivities: List<ActivityItem> = emptyList(),
+    onStopActivity: (Long) -> Unit = {},
+    isLandscape: Boolean = false
 ) {
     val configuration = LocalConfiguration.current
     val locale = configuration.locales[0]
@@ -475,6 +487,18 @@ private fun TodayTopBar(
                 text = stringResource(R.string.manage_button),
                 fontSize = 12.sp,
                 color = contentColor
+            )
+        }
+
+        if (isLandscape) {
+            CurrentTaskBlock(
+                activeActivities = activeActivities,
+                contentColor = contentColor,
+                onStopActivity = onStopActivity,
+                showHeader = false,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
             )
         }
 
@@ -578,19 +602,22 @@ private fun SearchBox(
 private fun CurrentTaskBlock(
     activeActivities: List<ActivityItem>,
     contentColor: Color,
-    onStopActivity: (Long) -> Unit
+    onStopActivity: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+    showHeader: Boolean = true
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
+        modifier = modifier
+            .padding(vertical = 4.dp)
     ) {
-        Text(
-            text = stringResource(R.string.current_task_header),
-            fontSize = ActivityRowDimens.headerFontSize * 0.7,
-            color = contentColor.copy(alpha = 0.7f),
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
+        if (showHeader) {
+            Text(
+                text = stringResource(R.string.current_task_header),
+                fontSize = ActivityRowDimens.headerFontSize * 0.7,
+                color = contentColor.copy(alpha = 0.7f),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+            )
+        }
 
         AnimatedContent(
             targetState = activeActivities,
@@ -609,6 +636,9 @@ private fun CurrentTaskBlock(
                     .height(
                         ActivityRowDimens.stopButtonSize +
                                 ActivityRowDimens.currentTaskBorderSize
+                    )
+                    .then(
+                        if (showHeader) Modifier.padding(horizontal = 16.dp) else Modifier
                     )
                     .then(
                         if (currentActiveList.isNotEmpty()) {
@@ -716,6 +746,17 @@ private fun CurrentTaskBlock(
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun TodayScreenPreview() {
+    TodayScreenContent()
+}
+
+@Preview(showBackground = true, device = "spec:width=891dp,height=411dp,orientation=landscape")
+@Composable
+fun TodayScreenLandscapePreview() {
+    TodayScreenContent()
+}
+
+@Composable
+private fun TodayScreenContent() {
     val now = System.currentTimeMillis()
 
     val activities = listOf(
