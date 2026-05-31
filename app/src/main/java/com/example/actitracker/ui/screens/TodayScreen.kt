@@ -628,7 +628,8 @@ private fun CurrentTaskBlock(
                 ) togetherWith fadeOut(
                     animationSpec = tween(300)
                 )
-            }
+            },
+            contentKey = { it.map { it.id } }
         ) { currentActiveList ->
             Box(
                 modifier = Modifier
