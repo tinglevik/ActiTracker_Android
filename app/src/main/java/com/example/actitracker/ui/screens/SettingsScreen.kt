@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -610,7 +611,10 @@ fun ImportFlowContainer(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 56.dp, bottom = 56.dp)
+                .navigationBarsPadding()
         ) {
             // STEP 1: Selection (Fade exit only)
             var activities by rememberSaveable { mutableStateOf(true) }
@@ -758,7 +762,10 @@ fun ClearDataFlowContainer(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 56.dp, bottom = 56.dp)
+                .navigationBarsPadding()
         ) {
             // STEP 1: Selection
             var activities by rememberSaveable { mutableStateOf(false) }
@@ -916,6 +923,9 @@ fun ImportExportDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = fixedCardBg,
+        modifier = Modifier
+            .padding(top = 56.dp, bottom = 56.dp)
+            .navigationBarsPadding(),
         title = { Text(stringResource(R.string.settings_import_export), color = fixedTitleColor) },
         text = {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
