@@ -149,7 +149,7 @@
     <string name="contrast_choose_color_label">Выберите читаемый цвет:</string>
     <string name="contrast_pick_text_manual">Выбрать цвет текста вручную</string>
     <string name="contrast_pick_bg_manual">Выбрать цвет фона вручную</string>
-    <string name="contrast_keep_anyway">Оставить как есть (не рекомендуется)</string>
+    <string name="contrast_keep_anyway">Оставить как есть\n(не рекомендуется)</string>
     <string name="apply_button">Применить</string>
 
     <!-- Low Contrast Warning Drawer -->

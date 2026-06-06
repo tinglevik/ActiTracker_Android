@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.actitracker.R
 import com.example.actitracker.ui.components.AdaptiveDialogButtons
 import com.example.actitracker.ui.theme.ActitrackerTheme
@@ -36,114 +38,140 @@ fun ContrastSuggestionDialog(
     onSuggestionSelected: (Color) -> Unit,
     onOpenColorPicker: () -> Unit,
     onKeepAnyway: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    bottomPadding: androidx.compose.ui.unit.Dp = 0.dp
 ) {
     var selectedColor by rememberSaveable(stateSaver = ColorSaver) { mutableStateOf(suggestions.firstOrNull()?.second) }
     val scrollState = rememberScrollState()
 
-    AlertDialog(
-        onDismissRequest = { /* Cannot be dismissed without a choice */ },
-        title = {
-            Text(
-                stringResource(R.string.contrast_dialog_title),
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                Text(
-                    if (isBackgroundChange)
-                        stringResource(R.string.contrast_bg_change_desc)
-                    else
-                        stringResource(R.string.contrast_text_change_desc),
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                // Preview
-                Box(
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+                .clickable(onClick = onDismiss),
+            contentAlignment = Alignment.Center
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                    .padding(bottom = 24.dp + bottomPadding)
+                    .clickable(enabled = false) {}, // Prevent closing when clicking on dialog
+                shape = RoundedCornerShape(28.dp),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 6.dp
+            ) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(backgroundColor)
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                        .padding(24.dp)
+                        .verticalScroll(scrollState)
                 ) {
                     Text(
-                        text = stringResource(R.string.contrast_preview_text),
-                        color = selectedColor ?: textColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        stringResource(R.string.contrast_dialog_title),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
                     )
-                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        if (isBackgroundChange)
+                            stringResource(R.string.contrast_bg_change_desc)
+                        else
+                            stringResource(R.string.contrast_text_change_desc),
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
 
-                Text(
-                    stringResource(R.string.contrast_choose_color_label),
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                // Color options
-                suggestions.forEach { (name, color) ->
-                    Row(
+                    // Preview
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .clickable { selectedColor = color }
-                            .padding(vertical = 8.dp, horizontal = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .background(backgroundColor)
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        RadioButton(
-                            selected = selectedColor == color,
-                            onClick = { selectedColor = color }
+                        Text(
+                            text = stringResource(R.string.contrast_preview_text),
+                            color = selectedColor ?: textColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center
                         )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(color)
-                                .border(1.dp, Color.Gray, CircleShape)
-                        )
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        Text(name, fontSize = 14.sp)
                     }
-                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // "Pick manually" button
-                OutlinedButton(
-                    onClick = onOpenColorPicker,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RectangleShape
-                ) {
                     Text(
-                        if (isBackgroundChange) stringResource(R.string.contrast_pick_text_manual)
-                        else stringResource(R.string.contrast_pick_bg_manual)
+                        stringResource(R.string.contrast_choose_color_label),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    // Color options
+                    suggestions.forEach { (name, color) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { selectedColor = color }
+                                .padding(vertical = 8.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selectedColor == color,
+                                onClick = { selectedColor = color }
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(color)
+                                    .border(1.dp, Color.Gray, CircleShape)
+                            )
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Text(name, fontSize = 14.sp)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // "Pick manually" button
+                    OutlinedButton(
+                        onClick = onOpenColorPicker,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RectangleShape
+                    ) {
+                        Text(
+                            if (isBackgroundChange) stringResource(R.string.contrast_pick_text_manual)
+                            else stringResource(R.string.contrast_pick_bg_manual)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Buttons
+                    AdaptiveDialogButtons(
+                        confirmText = stringResource(R.string.apply_button),
+                        onConfirm = { selectedColor?.let { onSuggestionSelected(it) } },
+                        onDismiss = onDismiss,
+                        confirmEnabled = selectedColor != null,
+                        deleteText = stringResource(R.string.contrast_keep_anyway),
+                        onDelete = onKeepAnyway,
+                        deleteContentColor = Color.White
                     )
                 }
             }
-        },
-        confirmButton = {
-            AdaptiveDialogButtons(
-                confirmText = stringResource(R.string.apply_button),
-                onConfirm = { selectedColor?.let { onSuggestionSelected(it) } },
-                onDismiss = onDismiss,
-                confirmEnabled = selectedColor != null,
-                deleteText = stringResource(R.string.contrast_keep_anyway),
-                onDelete = onKeepAnyway,
-                deleteContentColor = Color.White
-            )
-        },
-        dismissButton = null
-    )
+        }
+    }
 }
 
 @Preview(showBackground = true)

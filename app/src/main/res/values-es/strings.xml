@@ -149,7 +149,7 @@
     <string name="contrast_choose_color_label">Elija un color legible:</string>
     <string name="contrast_pick_text_manual">Elegir color de texto manualmente</string>
     <string name="contrast_pick_bg_manual">Elegir color de fondo manualmente</string>
-    <string name="contrast_keep_anyway">Mantener de todos modos (no recomendado)</string>
+    <string name="contrast_keep_anyway">Mantener de todos modos\n(no recomendado)</string>
     <string name="apply_button">Aplicar</string>
 
     <!-- Low Contrast Warning Drawer -->

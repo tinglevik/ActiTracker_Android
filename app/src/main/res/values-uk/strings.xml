@@ -149,7 +149,7 @@
     <string name="contrast_choose_color_label">Виберіть читабельний колір:</string>
     <string name="contrast_pick_text_manual">Вибрати колір тексту вручну</string>
     <string name="contrast_pick_bg_manual">Вибрати колір фону вручну</string>
-    <string name="contrast_keep_anyway">Залишити як є (не рекомендується)</string>
+    <string name="contrast_keep_anyway">Залишити як є\n(не рекомендується)</string>
     <string name="apply_button">Застосувати</string>
 
     <!-- Low Contrast Warning Drawer -->

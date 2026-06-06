@@ -41,7 +41,7 @@ fun AdaptiveDialogButtons(
                 shape = RectangleShape,
                 colors = confirmColors
             ) {
-                Text(confirmText, textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
+                Text(confirmText, textAlign = TextAlign.Center)
             }
 
             // Measurable 1: Dismiss
@@ -50,7 +50,7 @@ fun AdaptiveDialogButtons(
                 shape = RectangleShape,
                 colors = ButtonDefaults.textButtonColors(contentColor = dismissContentColor)
             ) {
-                Text(dismissText, textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
+                Text(dismissText, textAlign = TextAlign.Center)
             }
 
             // Measurable 2: Delete
@@ -63,7 +63,7 @@ fun AdaptiveDialogButtons(
                         contentColor = deleteContentColor
                     )
                 ) {
-                    Text(deleteText, textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
+                    Text(deleteText, textAlign = TextAlign.Center)
                 }
             }
         }
