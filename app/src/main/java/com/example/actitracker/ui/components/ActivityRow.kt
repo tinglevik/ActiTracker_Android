@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +36,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -66,7 +66,8 @@ fun ActivityRow(
     val locale = configuration.locales[0]
 
     val timeFormatter = remember(locale) {
-        android.icu.text.DateFormat.getTimeInstance(android.icu.text.DateFormat.SHORT, locale)
+        android.icu.text.DateFormat
+            .getTimeInstance(android.icu.text.DateFormat.SHORT, locale)
     }
 
     val activityTags = remember(activity.tagIds, allTags) {
@@ -83,8 +84,8 @@ fun ActivityRow(
                 .fillMaxWidth()
                 .clickable { onClick() }
                 .padding(
-                    vertical = ActivityRowDimens.activityWholeRowVerticalPadding,
-                    horizontal = ActivityRowDimens.activityWholeRowHorizontalPadding
+                    vertical = dimensionResource(R.dimen.activity_row_vertical_padding),
+                    horizontal = dimensionResource(R.dimen.activity_row_horizontal_padding)
                 )
         ) {
             Row(
@@ -97,14 +98,22 @@ fun ActivityRow(
                     AppIcon(
                         iconName = activity.icon,
                         tint = activity.color,
-                        modifier = Modifier.size(ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp)
+                        modifier = Modifier.size(
+                            dimensionResource(R.dimen.activity_row_icon_size)
+                        )
                     )
 
-                    Spacer(modifier = Modifier.height(ActivityRowDimens.iconCarouselSpacing))
+                    Spacer(
+                        modifier = Modifier.height(
+                            dimensionResource(R.dimen.activity_row_icon_to_dot_spacing)
+                        )
+                    )
 
                     Box(
                         modifier = Modifier
-                            .height(ActivityRowDimens.dotSize),
+                            .height(
+                                dimensionResource(R.dimen.activity_row_dot_size)
+                            ),
                         contentAlignment = Alignment.TopCenter
                     ) {
                         if (isActive) {
@@ -113,7 +122,11 @@ fun ActivityRow(
                     }
                 }
 
-                Spacer(Modifier.width(ActivityRowDimens.activityRowHorizontalSpacerSize))
+                Spacer(
+                    Modifier.width(
+                        dimensionResource(R.dimen.activity_row_section_spacing)
+                    )
+                )
 
                 Column(
                     modifier = Modifier.weight(1f)
@@ -133,19 +146,117 @@ fun ActivityRow(
                                 timeFormatter.format(Date(firstStart))
                             }
                             Text(
-                                text = stringResource(R.string.first_start_label, timeStr),
-                                fontSize = ActivityRowDimens.firstStartDayTimeFontSize,
+                                text = stringResource(
+                                    R.string.first_start_label,
+                                    timeStr
+                                ),
+                                fontSize = ActivityRowDimens.headerFontSize * 0.8,
                                 color = contentColor.copy(alpha = 0.7f),
-                                modifier = Modifier.padding(top = 2.dp)
+                                modifier = Modifier.padding(
+                                    top = dimensionResource(
+                                        R.dimen.activity_row_first_start_top_padding
+                                    )
+                                )
                             )
+                        }
+                    }
+                }
+
+                if (activityTags.isNotEmpty()) {
+
+                    val tagRowHeight = dimensionResource(
+                        R.dimen.activity_row_tag_row_height
+                    )
+                    val density = LocalDensity.current
+
+                    val adaptiveFontSize = (12f / density.fontScale).sp
+                    val tagIconSize = (tagRowHeight.value * 0.75f).dp
+
+                    Spacer(
+                        Modifier.width(
+                            dimensionResource(R.dimen.activity_row_section_spacing)
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier.height(tagRowHeight),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        if (activityTags.size == 1) {
+
+                            val tag = activityTags[0]
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Label,
+                                contentDescription = null,
+                                tint = tag.color,
+                                modifier = Modifier.size(tagIconSize)
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(
+                                    dimensionResource(R.dimen.activity_row_tag_spacing)
+                                )
+                            )
+
+                            Text(
+                                text = tag.name,
+                                fontSize = adaptiveFontSize,
+                                color = contentColor,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                        } else {
+
+                            activityTags.take(3).forEach { tag ->
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(
+                                        end = dimensionResource(
+                                            R.dimen.activity_row_tag_spacing
+                                        )
+                                    )
+                                ) {
+
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.Label,
+                                        contentDescription = null,
+                                        tint = tag.color,
+                                        modifier = Modifier.size(tagIconSize * 0.8f)
+                                    )
+
+                                    Text(
+                                        text = tag.name.take(1).uppercase(),
+                                        fontSize = adaptiveFontSize,
+                                        color = contentColor,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+
+                            if (activityTags.size > 3) {
+                                Spacer(
+                                    modifier = Modifier.width(
+                                        dimensionResource(R.dimen.activity_row_tag_spacing)
+                                    )
+                                )
+                                Text(
+                                    text = "+${activityTags.size - 3}",
+                                    fontSize = adaptiveFontSize,
+                                    color = contentColor,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
 
                 Spacer(
                     Modifier.width(
-                        (ActivityRowDimens.activityRowHorizontalSpacerSize.value * 0.5)
-                            .dp
+                        dimensionResource(R.dimen.activity_row_section_spacing)
                     )
                 )
 
@@ -159,69 +270,16 @@ fun ActivityRow(
                     )
                 }
             }
-
-            // Tags List - starting from 2/3 of the row width
-            if (activityTags.isNotEmpty()) {
-                BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                    val startOffset = maxWidth * (2f / 3f)
-                    Row(
-                        modifier = Modifier
-                            .padding(start = startOffset)
-                            .height(24.dp)
-                            .align(Alignment.TopStart),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        if (activityTags.size == 1) {
-                            val tag = activityTags[0]
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Label,
-                                contentDescription = null,
-                                tint = tag.color,
-                                modifier = Modifier.size(
-                                    ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = tag.name,
-                                fontSize = ActivityRowDimens.headerFontSize,
-                                color = contentColor,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        } else {
-                            activityTags.forEach { tag ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(end = 4.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.Label,
-                                        contentDescription = null,
-                                        tint = tag.color,
-                                        modifier = Modifier.size(
-                                            (ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE * 0.7).dp
-                                        )
-                                    )
-                                    Text(
-                                        text = tag.name.take(1).uppercase(),
-                                        fontSize =
-                                            (ActivityRowDimens.headerFontSize.value * 0.7).sp,
-                                        color = contentColor,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            thickness = 1.dp,
+            modifier = Modifier.padding(
+                horizontal = dimensionResource(
+                    R.dimen.activity_row_divider_horizontal_padding
+                )
+            ),
+            thickness =
+                dimensionResource(R.dimen.activity_row_divider_thickness),
             color = contentColor.copy(alpha = 0.1f)
         )
     }
@@ -239,7 +297,7 @@ private val EllipsisMoveEasing = CubicBezierEasing(0.25f, 1f, 0.75f, 1f)
 
 @Composable
 fun DotsLoader(
-    dotSize: Dp = ActivityRowDimens.dotSize,
+    dotSize: Dp = dimensionResource(R.dimen.activity_row_dot_size),
     color: Color = Color.Gray
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "ellipsis")
@@ -266,7 +324,7 @@ fun DotsLoader(
     }
 
     // Distance between nearest dots
-    val spacing = dotSize + ActivityRowDimens.dotSpacing
+    val spacing = dotSize + dimensionResource(R.dimen.activity_row_dot_spacing)
     val density = LocalDensity.current
     val spacingPx = with(density) { spacing.toPx() }
 
@@ -330,7 +388,7 @@ private fun EllipsisDot(
 fun ActivityRowPreview() {
     val sampleActivity = ActivityItem(
         id = 1,
-        name = "Running",
+        name = "Running very very long and actively",
         icon = "Exercise",
         color = Color(0xFF6200EE),
         elapsedSeconds = 754, // 12:34

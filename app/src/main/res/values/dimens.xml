@@ -25,4 +25,30 @@
     <dimen name="color_picker_warning_text_size">13sp</dimen>
     <dimen name="color_picker_error_top_padding">4dp</dimen>
     <dimen name="color_picker_bottom_spacer">24dp</dimen>
+
+    <!--ActivityRow-->
+    <dimen name="activity_row_divider_thickness">1dp</dimen>
+    <dimen name="activity_row_first_start_top_padding">2dp</dimen>
+    <dimen name="activity_row_tag_spacing">4dp</dimen>
+    <dimen name="activity_row_divider_horizontal_padding">8dp</dimen>
+    <dimen name="activity_row_tag_row_height">50dp</dimen>
+<!--    <dimen name="activity_row_tag_font_size">12sp</dimen>-->
+
+    <!-- spacing -->
+    <dimen name="activity_row_vertical_padding">4dp</dimen>
+    <dimen name="activity_row_horizontal_padding">16dp</dimen>
+    <dimen name="activity_row_section_spacing">12dp</dimen>
+    <dimen name="activity_row_icon_to_dot_spacing">2dp</dimen>
+
+    <!-- icon + dots -->
+    <dimen name="activity_row_icon_size">24dp</dimen>
+    <dimen name="activity_row_dot_size">4dp</dimen>
+
+<!--    &lt;!&ndash; text &ndash;&gt;-->
+<!--    <dimen name="activity_row_header_text">16sp</dimen>-->
+
+    <!--DotsLoader-->
+    <dimen name="activity_row_dot_spacing">4dp</dimen>
+
+    <dimen name="activity_row_min_height">48dp</dimen>
 </resources>

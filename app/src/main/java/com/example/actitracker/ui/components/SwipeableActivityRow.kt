@@ -26,12 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.actitracker.R
 import com.example.actitracker.data.model.ActivityItem
 import com.example.actitracker.ui.theme.ActitrackerTheme
@@ -87,8 +86,10 @@ fun SwipeableActivityRow(
                     .fillMaxWidth()
                     .clickable(onClick = onClick)
                     .padding(
-                        vertical = ActivityRowDimens.activityWholeRowVerticalPadding,
-                        horizontal = ActivityRowDimens.activityWholeRowHorizontalPadding
+                        vertical =
+                            dimensionResource(R.dimen.activity_row_vertical_padding),
+                        horizontal =
+                            dimensionResource(R.dimen.activity_row_horizontal_padding)
                     )
             ) {
                 Row(
@@ -102,13 +103,21 @@ fun SwipeableActivityRow(
                         AppIcon(
                             iconName = activity.icon,
                             tint = activity.color,
-                            modifier = Modifier.size(ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp)
+                            modifier = Modifier.size(
+                                dimensionResource(R.dimen.activity_row_icon_size)
+                            )
                         )
 
-                        Spacer(modifier = Modifier.height(ActivityRowDimens.iconCarouselSpacing))
+                        Spacer(
+                            modifier = Modifier.height(
+                                dimensionResource(R.dimen.activity_row_icon_to_dot_spacing)
+                            )
+                        )
 
                         Box(
-                            modifier = Modifier.height(ActivityRowDimens.dotSize),
+                            modifier = Modifier.height(
+                                dimensionResource(R.dimen.activity_row_dot_size)
+                            ),
                             contentAlignment = Alignment.TopCenter
                         ) {
                             if (isActive) {
@@ -117,12 +126,18 @@ fun SwipeableActivityRow(
                         }
                     }
 
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(
+                        Modifier.width(
+                            dimensionResource(R.dimen.activity_row_section_spacing)
+                        )
+                    )
 
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .heightIn(ActivityRowDimens.minRowHeight),
+                            .heightIn(
+                                dimensionResource(R.dimen.activity_row_min_height)
+                            ),
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
@@ -147,11 +162,10 @@ fun SwipeableActivityRow(
                         }
                     }
 
-
                     if (isActive || activity.elapsedSeconds > 0) {
                         Text(
                             text = formatSeconds(activity.elapsedSeconds),
-                            fontSize = 16.sp,
+                            fontSize = ActivityRowDimens.headerFontSize,
                             fontWeight = FontWeight.Medium,
                             color = contentColor
                         )
@@ -160,8 +174,11 @@ fun SwipeableActivityRow(
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                thickness = 1.dp,
+                modifier = Modifier.padding(
+                    horizontal =
+                        dimensionResource(R.dimen.activity_row_divider_horizontal_padding)
+                ),
+                thickness = dimensionResource(R.dimen.activity_row_divider_thickness),
                 color = contentColor.copy(alpha = 0.1f)
             )
         }
