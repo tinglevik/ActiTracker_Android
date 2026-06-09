@@ -211,8 +211,6 @@ private fun ExpandedDrawer(
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Preview Parameter Provider
 private data class DrawerPreviewState(
     val name: String,
@@ -224,20 +222,29 @@ private class DrawerPreviewStateProvider :
     PreviewParameterProvider<DrawerPreviewState> {
     override val values = sequenceOf(
         DrawerPreviewState(
-            "Collapsed — много времени",
+            "Collapsed - plenty of time",
             secondsLeft = 30,
             isExpanded = false
         ),
-        DrawerPreviewState("Collapsed — мало времени", secondsLeft = 5, isExpanded = false),
-        DrawerPreviewState("Expanded — много времени", secondsLeft = 30, isExpanded = true),
-        DrawerPreviewState("Expanded — мало времени", secondsLeft = 5, isExpanded = true),
+        DrawerPreviewState(
+            "Collapsed - little time",
+            secondsLeft = 5,
+            isExpanded = false
+        ),
+        DrawerPreviewState(
+            "Expanded - plenty of time",
+            secondsLeft = 30,
+            isExpanded = true
+        ),
+        DrawerPreviewState(
+            "Expanded - little time",
+            secondsLeft = 5,
+            isExpanded = true
+        ),
     )
 }
 
-// ─────────────────────────────────────────
-// Параметризованный preview (все состояния)
-// ─────────────────────────────────────────
-
+// Parametrized preview (all states)
 @Preview(
     name = "Drawer states",
     showBackground = true,
@@ -253,12 +260,9 @@ private fun LowContrastWarningDrawerParametrizedPreview(
     CollapsedOrExpandedDrawerPreview(state)
 }
 
-// ─────────────────────────────────────────
-// Явные preview: Collapsed
-// ─────────────────────────────────────────
-
+// Explicit previews: Collapsed
 @Preview(
-    name = "Drawer — Collapsed / 30s",
+    name = "Drawer - Collapsed / 30s",
     showBackground = true,
     backgroundColor = 0xFF121212,
     widthDp = 360,
@@ -274,7 +278,7 @@ private fun CollapsedDrawer30sPreview() {
 }
 
 @Preview(
-    name = "Drawer — Collapsed / 5s",
+    name = "Drawer - Collapsed / 5s",
     showBackground = true,
     backgroundColor = 0xFF121212,
     widthDp = 360,
@@ -289,10 +293,7 @@ private fun CollapsedDrawer5sPreview() {
     )
 }
 
-// ─────────────────────────────────────────
-// Явные preview: Expanded
-// ─────────────────────────────────────────
-
+// Explicit previews: Expanded
 @Preview(
     name = "Drawer — Expanded / 30s",
     showBackground = true,
@@ -329,12 +330,9 @@ private fun ExpandedDrawer5sPreview() {
     )
 }
 
-// ─────────────────────────────────────────
-// Preview полного экрана со скримом
-// ─────────────────────────────────────────
-
+// Full-screen preview with scrim
 @Preview(
-    name = "Full screen — Expanded (со скримом)",
+    name = "Full screen — Expanded (with scrim)",
     showBackground = true,
     backgroundColor = 0xFF121212,
     widthDp = 360,
@@ -343,12 +341,12 @@ private fun ExpandedDrawer5sPreview() {
 )
 @Composable
 private fun FullScreenExpandedPreview() {
-    // Подменяем LaunchedEffect — просто фиксируем состояние
+    // LaunchedEffect is replaced — state is just fixed for preview purposes
     FullScreenDrawerContent(isExpanded = true, secondsLeft = 20)
 }
 
 @Preview(
-    name = "Full screen — Collapsed (без скрима)",
+    name = "Full screen — Collapsed (no scrim)",
     showBackground = true,
     backgroundColor = 0xFF121212,
     widthDp = 360,
@@ -360,11 +358,8 @@ private fun FullScreenCollapsedPreview() {
     FullScreenDrawerContent(isExpanded = false, secondsLeft = 20)
 }
 
-// ─────────────────────────────────────────
-// Вспомогательные composable для preview
-// (без LaunchedEffect и анимации)
-// ─────────────────────────────────────────
-
+// Helper composables for preview
+// (no LaunchedEffect, no animation)
 @Composable
 private fun FullScreenDrawerContent(
     isExpanded: Boolean,
@@ -374,7 +369,7 @@ private fun FullScreenDrawerContent(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.CenterEnd
     ) {
-        // Скрим
+        // Scrim overlay
         if (isExpanded) {
             Box(
                 modifier = Modifier
@@ -383,7 +378,7 @@ private fun FullScreenDrawerContent(
             )
         }
 
-        // Ящик без анимации — фиксированная ширина
+        // Drawer panel without animation — fixed width for static preview
         Box(
             modifier = Modifier
                 .width(if (isExpanded) FULL_WIDTH else PEEK_WIDTH)
