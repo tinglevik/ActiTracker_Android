@@ -62,6 +62,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -69,12 +70,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.actitracker.R
 import com.example.actitracker.data.model.ActivityItem
 import com.example.actitracker.data.model.TagItem
-import com.example.actitracker.ui.components.ActivityRowDimens
+import com.example.actitracker.ui.components.AppTextSizes
 import com.example.actitracker.ui.components.AppIcon
 import com.example.actitracker.ui.components.CircleIconButton
 import com.example.actitracker.ui.components.ReorderableLazyColumn
@@ -170,11 +169,11 @@ fun TodayScreen(
                 painter = painterResource(R.drawable.ic_add_outline),
                 outerShape = CircleShape,
                 contentDescription = stringResource(R.string.add_activity),
-                size = 50.dp,
+                size = dimensionResource(R.dimen.today_screen_fab_size),
                 containerColor = contentColor,
                 iconTint = backgroundColor,
                 modifier = Modifier.shadow(
-                    elevation = 8.dp,
+                    elevation = dimensionResource(R.dimen.today_screen_fab_shadow),
                     shape = CircleShape,
                     clip = false
                 )
@@ -200,19 +199,24 @@ fun TodayScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(
+                        horizontal =
+                            dimensionResource(R.dimen.screen_padding)
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(R.string.task_header),
-                    fontSize = ActivityRowDimens.headerFontSize * 0.7,
+                    fontSize = AppTextSizes.headerFontSizeSmall,
                     fontWeight = FontWeight.Medium,
                     color = contentColor.copy(alpha = 0.7f)
                 )
 
                 Spacer(
                     Modifier.width(
-                        (ActivityRowDimens.activityRowHorizontalSpacerSize.value * 0.7).dp
+                        dimensionResource(
+                            R.dimen.activityRowHorizontalSpacerSize
+                        ) * 0.7f
                     )
                 )
 
@@ -232,7 +236,9 @@ fun TodayScreen(
 
                 Spacer(
                     Modifier.width(
-                        (ActivityRowDimens.activityRowHorizontalSpacerSize.value * 0.7).dp
+                        dimensionResource(
+                            R.dimen.activityRowHorizontalSpacerSize
+                        ) * 0.7f
                     )
                 )
 
@@ -241,7 +247,10 @@ fun TodayScreen(
                     Row(
                         modifier = Modifier
                             .clickable { showFilterMenu = true }
-                            .padding(vertical = 4.dp),
+                            .padding(
+                                vertical =
+                                    dimensionResource(R.dimen.activity_row_tag_spacing)
+                            ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val filterText = when (selectedTagFilterId) {
@@ -252,15 +261,22 @@ fun TodayScreen(
                         }
                         Text(
                             text = filterText,
-                            fontSize = ActivityRowDimens.headerFontSize * 0.7,
+                            fontSize = AppTextSizes.headerFontSizeSmall,
                             color = contentColor.copy(alpha = 0.7f),
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(
+                            modifier =
+                                Modifier.width(
+                                    dimensionResource(R.dimen.activity_row_tag_spacing)
+                                )
+                        )
                         Icon(
                             imageVector = Icons.Default.FilterList,
                             contentDescription = stringResource(R.string.filter_description),
                             tint = contentColor,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(
+                                dimensionResource(R.dimen.today_screen_filter_icon_size)
+                            )
                         )
                     }
 
@@ -464,8 +480,14 @@ private fun TodayTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                vertical = ActivityRowDimens.activityWholeRowVerticalPadding,
-                horizontal = ActivityRowDimens.activityWholeRowHorizontalPadding
+                vertical =
+                    dimensionResource(
+                        R.dimen.today_screen_topbar_row_vertical_padding
+                    ),
+                horizontal =
+                    dimensionResource(
+                        R.dimen.today_screen_topbar_row_horizontal_padding
+                    )
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -473,19 +495,31 @@ private fun TodayTopBar(
         Column(
             modifier = Modifier
                 .clickable(onClick = onManageClick)
-                .padding(ActivityRowDimens.activityWholeRowVerticalPadding),
+//                .padding(AppTextSizes.activityWholeRowVerticalPadding),
+                .padding(
+                    dimensionResource(
+                        R.dimen.today_screen_topbar_row_vertical_padding
+                    ),
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_manage_activities),
                 contentDescription = stringResource(R.string.manage_activities_desc),
                 tint = contentColor,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(
+                    dimensionResource(R.dimen.today_screen_topbar_manage_icon_size)
+                )
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        dimensionResource(R.dimen.today_screen_topbar_manage_icon_spacing)
+                    )
+            )
             Text(
                 text = stringResource(R.string.manage_button),
-                fontSize = 12.sp,
+                fontSize = AppTextSizes.labelSmall,
                 color = contentColor
             )
         }
@@ -498,13 +532,16 @@ private fun TodayTopBar(
                 showHeader = false,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 16.dp)
+                    .padding(
+                        horizontal =
+                            dimensionResource(R.dimen.screen_padding)
+                    )
             )
         }
 
         Text(
             text = dateText,
-            fontSize = 20.sp,
+            fontSize = AppTextSizes.dateHeader,
             fontWeight = FontWeight.Bold,
             color = contentColor
         )
@@ -525,12 +562,23 @@ private fun SearchBox(
 
     Box(
         modifier = modifier
-            .height(40.dp)
+            .height(
+                dimensionResource(R.dimen.today_screen_search_height)
+            )
             .then(
                 if (isActive) {
                     Modifier.border(
-                        BorderStroke(1.dp, contentColor),
-                        RoundedCornerShape(8.dp)
+                        BorderStroke(
+                            dimensionResource(
+                                R.dimen.today_screen_search_border_width
+                            ),
+                            contentColor
+                        ),
+                        RoundedCornerShape(
+                            dimensionResource(
+                                R.dimen.today_screen_search_corner_radius
+                            )
+                        )
                     )
                 } else {
                     Modifier
@@ -551,19 +599,25 @@ private fun SearchBox(
                 imageVector = Icons.Default.Search,
                 contentDescription = stringResource(R.string.search_hint),
                 tint = contentColor,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(
+                    start =
+                        dimensionResource(R.dimen.activity_row_tag_spacing)
+                )
             )
         } else {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(
+                    horizontal =
+                        dimensionResource(R.dimen.today_screen_search_horizontal_padding)
+                )
             ) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (query.isEmpty()) {
                         Text(
                             text = stringResource(R.string.search_hint),
                             color = contentColor.copy(alpha = 0.5f),
-                            fontSize = 16.sp
+                            fontSize = AppTextSizes.headerFontSize
                         )
                     }
                     BasicTextField(
@@ -572,7 +626,10 @@ private fun SearchBox(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
-                        textStyle = TextStyle(color = contentColor, fontSize = 16.sp),
+                        textStyle = TextStyle(
+                            color = contentColor,
+                            fontSize = AppTextSizes.headerFontSize
+                        ),
                         cursorBrush = SolidColor(contentColor),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
@@ -588,7 +645,9 @@ private fun SearchBox(
                     contentDescription = stringResource(R.string.clear_search),
                     tint = contentColor,
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(
+                            dimensionResource(R.dimen.today_screen_search_clear_icon_size)
+                        )
                         .clickable {
                             onActiveChange(false)
                         }
@@ -608,14 +667,22 @@ private fun CurrentTaskBlock(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = 4.dp)
+            .padding(vertical =
+                dimensionResource(R.dimen.today_screen_current_task_vertical_padding)
+            )
     ) {
         if (showHeader) {
             Text(
                 text = stringResource(R.string.current_task_header),
-                fontSize = ActivityRowDimens.headerFontSize * 0.7,
+                fontSize = AppTextSizes.headerFontSizeSmall,
                 color = contentColor.copy(alpha = 0.7f),
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                modifier = Modifier.padding(
+                    start = dimensionResource(R.dimen.screen_padding),
+                    end = dimensionResource(R.dimen.screen_padding),
+                    bottom = dimensionResource(
+                        R.dimen.today_screen_current_task_header_bottom_padding
+                    )
+                )
             )
         }
 
@@ -635,20 +702,36 @@ private fun CurrentTaskBlock(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(
-                        ActivityRowDimens.stopButtonSize +
-                                ActivityRowDimens.currentTaskBorderSize
+                        dimensionResource(
+                            R.dimen.today_screen_current_task_stop_button_size
+                        ) +
+                                dimensionResource(
+                                    R.dimen.today_screen_current_task_border_size
+                                )
                     )
                     .then(
-                        if (showHeader) Modifier.padding(horizontal = 16.dp) else Modifier
+                        if (showHeader)
+                            Modifier.padding(
+                                horizontal =
+                                    dimensionResource(R.dimen.screen_padding)
+                            )
+                        else Modifier
                     )
                     .then(
                         if (currentActiveList.isNotEmpty()) {
                             Modifier.border(
                                 BorderStroke(
-                                    ActivityRowDimens.currentTaskBorderSize,
+//                                    AppTextSizes.currentTaskBorderSize,
+                                    dimensionResource(
+                                        R.dimen.today_screen_current_task_border_size
+                                    ),
                                     contentColor
                                 ),
-                                RoundedCornerShape(8.dp)
+                                RoundedCornerShape(
+                                    dimensionResource(
+                                        R.dimen.today_screen_current_task_corner_radius
+                                    )
+                                )
                             )
                         } else {
                             Modifier
@@ -660,7 +743,7 @@ private fun CurrentTaskBlock(
                     Text(
                         text = stringResource(R.string.no_activity_running),
                         color = contentColor.copy(alpha = 0.5f),
-                        fontSize = 16.sp
+                        fontSize = AppTextSizes.headerFontSize
                     )
                 } else {
                     Column(
@@ -672,25 +755,29 @@ private fun CurrentTaskBlock(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Box(
-                                    modifier = Modifier.size(ActivityRowDimens.stopButtonSize),
+                                    modifier = Modifier.size(
+                                        dimensionResource(
+                                            R
+                                                .dimen
+                                                .today_screen_current_task_stop_button_size
+                                        )
+                                    ),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     AppIcon(
                                         iconName = activity.icon,
                                         tint = activity.color,
                                         modifier = Modifier.size(
-                                            ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp
+                                            dimensionResource(R.dimen.activity_row_icon_size)
                                         )
                                     )
                                 }
 
                                 Spacer(
                                     modifier = Modifier.width(
-                                        (ActivityRowDimens
-                                            .activityRowHorizontalSpacerSize
-                                            .value
-                                                * 0.5)
-                                            .dp
+                                        dimensionResource(
+                                            R.dimen.activityRowHorizontalSpacerSize
+                                        ) * 0.5f
                                     )
                                 )
 
@@ -698,7 +785,7 @@ private fun CurrentTaskBlock(
                                     text = activity.name,
                                     color = contentColor,
                                     fontWeight = FontWeight.Medium,
-                                    fontSize = ActivityRowDimens.headerFontSize,
+                                    fontSize = AppTextSizes.headerFontSize,
                                     modifier = Modifier.weight(1f),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
@@ -706,23 +793,24 @@ private fun CurrentTaskBlock(
 
                                 Spacer(
                                     modifier = Modifier.width(
-                                        (ActivityRowDimens
-                                            .activityRowHorizontalSpacerSize
-                                            .value
-                                                * 0.5)
-                                            .dp
+                                        dimensionResource(
+                                            R.dimen.activityRowHorizontalSpacerSize
+                                        ) * 0.5f
                                     )
                                 )
 
                                 Text(
                                     text = formatSeconds(activity.elapsedSeconds),
                                     color = contentColor,
-                                    fontSize = ActivityRowDimens.headerFontSize
+                                    fontSize = AppTextSizes.headerFontSize
                                 )
 
                                 Box(
                                     modifier = Modifier
-                                        .size(ActivityRowDimens.stopButtonSize)
+                                        .size(
+                                            dimensionResource(
+                                                R.dimen.today_screen_current_task_stop_button_size
+                                            ))
                                         .clickable { onStopActivity(activity.id) },
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -731,7 +819,7 @@ private fun CurrentTaskBlock(
                                         contentDescription = stringResource(R.string.stop_activity_desc),
                                         tint = contentColor,
                                         modifier = Modifier.size(
-                                            ActivityRowDimens.ACTIVITY_ROW_ICON_SIZE.dp
+                                            dimensionResource(R.dimen.activity_row_icon_size)
                                         )
                                     )
                                 }

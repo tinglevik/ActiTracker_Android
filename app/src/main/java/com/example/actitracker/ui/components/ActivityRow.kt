@@ -133,7 +133,7 @@ fun ActivityRow(
                 ) {
                     Text(
                         text = activity.name,
-                        fontSize = ActivityRowDimens.headerFontSize,
+                        fontSize = AppTextSizes.headerFontSize,
                         fontWeight = FontWeight.Medium,
                         color = contentColor,
                         maxLines = 1,
@@ -150,7 +150,7 @@ fun ActivityRow(
                                     R.string.first_start_label,
                                     timeStr
                                 ),
-                                fontSize = ActivityRowDimens.headerFontSize * 0.8,
+                                fontSize = AppTextSizes.headerFontSize * 0.8,
                                 color = contentColor.copy(alpha = 0.7f),
                                 modifier = Modifier.padding(
                                     top = dimensionResource(
@@ -264,7 +264,7 @@ fun ActivityRow(
                 if (showTimer && (isActive || activity.elapsedSeconds > 0)) {
                     Text(
                         text = formatSeconds(activity.elapsedSeconds),
-                        fontSize = ActivityRowDimens.headerFontSize,
+                        fontSize = AppTextSizes.headerFontSize,
                         fontWeight = FontWeight.Medium,
                         color = contentColor
                     )

@@ -142,7 +142,7 @@ fun SwipeableActivityRow(
                     ) {
                         Text(
                             text = activity.name,
-                            fontSize = ActivityRowDimens.headerFontSize,
+                            fontSize = AppTextSizes.headerFontSize,
                             fontWeight = FontWeight.Medium,
                             color = contentColor,
                             maxLines = 1,
@@ -156,7 +156,7 @@ fun SwipeableActivityRow(
 
                             Text(
                                 text = stringResource(R.string.started_at_format, timeStr),
-                                fontSize = ActivityRowDimens.firstStartDayTimeFontSize,
+                                fontSize = AppTextSizes.firstStartDayTimeFontSize,
                                 color = contentColor.copy(alpha = 0.7f),
                             )
                         }
@@ -165,7 +165,7 @@ fun SwipeableActivityRow(
                     if (isActive || activity.elapsedSeconds > 0) {
                         Text(
                             text = formatSeconds(activity.elapsedSeconds),
-                            fontSize = ActivityRowDimens.headerFontSize,
+                            fontSize = AppTextSizes.headerFontSize,
                             fontWeight = FontWeight.Medium,
                             color = contentColor
                         )
