@@ -12,6 +12,9 @@
   <img src="screenshots/scr_notification_in_block.png" width="250" alt="Active activity in notification panel">
 </div>
 
+<video autoplay loop muted playsinline src="https://github.com/user-attachments/assets/xxx">
+</video>
+
 ---
 
 ## 🎯 About the Project
@@ -35,9 +38,9 @@
 Detailed instructions for using the application:  
 [Open User Guide](docs/USER_GUIDE.md)
 
-### 📦 7. Installation
+## 📦 Installation
 1. Download the APK file:
-[Download APK](https://github.com/tinglevik/actitracker_Android/releases/latest/app-release.apk)
+[Download APK](https://github.com/tinglevik/actitracker_Android/releases/latest/download/app-release.apk)
 2. Open the file on your device
 3. If necessary, allow installation from unknown sources
 4. Confirm installation
