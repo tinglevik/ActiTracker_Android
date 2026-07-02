@@ -19,7 +19,7 @@ To create an activity, click on the "+" button
 
 In the window that appears <img src="../screenshots/scr_home_add_dialog.png" height="200"> you can configure:
 
-| activity color | icon for it | assign a tag to it (see paragraph 2) |
+| activity color | icon for it | assign a tag to it<br>(see paragraph 2) |
 |:---: | :---: | :---: |
 |<img src="../screenshots/scr_home_add_colorpicker.png" height="450"> | <img src="../screenshots/scr_home_add_iconpicker.png" height="450"> | <img src="../screenshots/scr_home_add_tagpicker.png" height="450"> |
 
@@ -67,14 +67,12 @@ You can change the colors of the interface, text, and icons at your discretion.
 |:---: | :---: |
 |<img src="../screenshots/scr_settings.png" height="450"> | <img src="../screenshots/scr_settings_bg-text-color-set.png" height="450"> |
 
-Note:
+> **Note.**<br>
 If you accidentally choose background and text colors that make the text and elements unreadable (or hard to read), the app will revert those changes after 30 seconds unless you explicitly agree to keep those settings in the warning that appears on the right:
 
 | Warning collapsed | Warning expanded |
 |:---: | :---: |
 |<img src="../screenshots/scr_settings_warn-collapsed.png" height="450"> | <img src="../screenshots/scr_settings_warn-expanded.png" height="450"> |
-
-Future updates are expected to include settings for importing/exporting activities, backgrounds, custom icons, time and date display mode settings, and languages.
 
 ### 🏆 6. Goals and Progress
 This feature is coming in a future update. Stay tuned!
