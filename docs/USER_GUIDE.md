@@ -2,6 +2,14 @@
 
 [English] | [Русский](ru/USER_GUIDE.md) | [Deutsch](de/USER_GUIDE.md) | [Español](es/USER_GUIDE.md) | [Українська](uk/USER_GUIDE.md)
 
+## Contents
+1. [Create a List of Activities](#-1-create-a-list-of-activities)
+2. [Create Tags (Categories)](#-2-create-tags-categories)
+3. [View Visual Reports](#-3-view-visual-reports)
+4. [Configure Quick Access](#-4-configure-quick-access-quick-panel)
+5. [App Settings](#-5-app-settings)
+6. [Goals and Progress](#-6-goals-and-progress)
+
 ### 🚀 1. Create a List of Activities
 To create an activity, click on the "+" button
 
@@ -15,7 +23,7 @@ In the window that appears <img src="../screenshots/scr_home_add_dialog.png" hei
 |:---: | :---: | :---: |
 |<img src="../screenshots/scr_home_add_colorpicker.png" height="450"> | <img src="../screenshots/scr_home_add_iconpicker.png" height="450"> | <img src="../screenshots/scr_home_add_tagpicker.png" height="450"> |
 
-After that, you can start and stop activities by clicking on them on the "Today" screen, as well as in the notification panels in both unlocked and locked states of the device (see paragraph 5 below on how to add activities to notification panels). The activities will look like this:
+After that, you can start and stop activities by clicking on them on the "Today" screen, as well as in the notification panels in both unlocked and locked states of the device (see paragraph 4 on how to set up quick access). The activities will look like this:
 
 | Inactive | Active tracking |
 |:---: | :---: |
@@ -40,11 +48,11 @@ Go to the "Report" screen by clicking the icon in the bottom panel. Here, a pie 
 | <img src="../screenshots/scr_report_activities.png" height="450"> | <img src="../screenshots/scr_report_tags.png" height="450"> |
 
 ### ⚡ 4. Configure Quick Access (Quick Panel)
-You can manage tracking directly from the notification panel. To do this, add and remove activities for quick start to switch activities without having to open the app or unlock the device. You can do this by long-pressing an activity on the "Today" screen or by toggling the corresponding button in the activity settings window from the "Manage" screen (see paragraph 1):
+You can manage tracking directly from the notification panel. To do this, add activities to the quick panel - this lets you start/stop tracking without opening the app or unlocking the device. You can do this by long-pressing an activity on the "Today" screen or by toggling the corresponding button in the activity settings window from the "Manage" screen (see paragraph 1):
 
 | long press on the "Today" screen | from the "Manage" window |
 |:---: | :---: |
-|<img src="../screenshots/scr_notify_pannel_set_add.png" height="450"> <img src="../screenshots/scr_notify_pannel_set_remove.png" height="450"> | <img src="../screenshots/scr_home_add_toggle-pannel.png" height="450"> |
+|<img src="../screenshots/scr_notify_panel_set_add.png" height="450"> <img src="../screenshots/scr_notify_panel_set_remove.png" height="450"> | <img src="../screenshots/scr_home_add_toggle-panel.png" height="450"> |
 
 Activities in the notification panels will look like this:
 
@@ -69,4 +77,7 @@ If you accidentally choose background and text colors that make the text and ele
 Future updates are expected to include settings for importing/exporting activities, backgrounds, custom icons, time and date display mode settings, and languages.
 
 ### 🏆 6. Goals and Progress
-The functionality for this window is expected in future updates.
+This feature is coming in a future update. Stay tuned!
+
+---
+[← Back to README](../README.md)
