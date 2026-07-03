@@ -15,6 +15,9 @@
 <video autoplay loop muted playsinline src="https://github.com/user-attachments/assets/b673c07b-6e17-4f22-be6f-b8fe5aa479c4">
 </video>
 
+### 📺 Full Video Demo
+[![ActiTracker Full Demo](https://img.youtube.com/vi/HEWZS-MTMIQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=HEWZS-MTMIQ)
+
 ---
 
 ## 🎯 About the Project
