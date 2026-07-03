@@ -1,6 +1,6 @@
 # ActiTracker
 
-[English] | [Русский](README.ru.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Українська](README.uk.md)
+[English] | [Deutsch](README.de.md) | [Español](README.es.md) | [Русский](README.ru.md) | [Українська](README.uk.md)
 
 <div style="text-align: center;">
   <b>A simple and convenient time tracker that allows you to visually evaluate your daily activities.</b>
@@ -12,7 +12,7 @@
   <img src="screenshots/scr_notification_in_block.png" width="250" alt="Active activity in notification panel">
 </div>
 
-<video autoplay loop muted playsinline src="https://github.com/user-attachments/assets/xxx">
+<video autoplay loop muted playsinline src="https://github.com/user-attachments/assets/b673c07b-6e17-4f22-be6f-b8fe5aa479c4">
 </video>
 
 ---

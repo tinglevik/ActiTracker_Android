@@ -1,6 +1,6 @@
 # ActiTracker
 
-[English](README.md) | [Русский](README.ru.md) | [Deutsch] | [Español](README.es.md) | [Українська](README.uk.md)
+[English](README.md) | [Deutsch] | [Español](README.es.md) | [Русский](README.ru.md) |  [Українська](README.uk.md)
 
 <div style="text-align: center;">
   <b>Ein einfacher und bequemer Zeittracker, mit dem Sie Ihre täglichen Aktivitäten visuell auswerten können.</b>
@@ -11,6 +11,9 @@
   <img src="screenshots/scr_report_activities.png" width="250" alt="Statistik- und Berichtsbildschirm">
   <img src="screenshots/scr_notification_in_block.png" width="250" alt="Aktive Aktivität im Benachrichtigungsfeld">
 </div>
+
+<video autoplay loop muted playsinline src="https://github.com/user-attachments/assets/b673c07b-6e17-4f22-be6f-b8fe5aa479c4">
+</video>
 
 ---
 
