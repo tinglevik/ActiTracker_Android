@@ -33,3 +33,4 @@ Desktop.ini
 /app/release/
 *.apk
 *.aab
+/gradle/gradle-daemon-jvm.properties
