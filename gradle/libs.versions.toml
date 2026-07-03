@@ -33,6 +33,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+#core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
