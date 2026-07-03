@@ -30,3 +30,6 @@ Desktop.ini
 
 # Profiler
 *.hprof
+/app/release/
+*.apk
+*.aab
